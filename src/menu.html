@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head manifest="offline.appcache" profile="http://dublincore.org/documents/dcq-html/">
+<link rel="stylesheet" href="css/content.css">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
 <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -61,31 +62,35 @@
   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 " />
-<style type="text/css">
-body { margin:0px; padding:0px; background-color:#E0E0E0; }
-iframe { margin:0px; padding:0px; border:none; width:100% }
-</style>
-<script type="text/javascript">
-function resizeFrame() {
-  frame = document.getElementById('iframe');
-  remainingHeight = window.innerHeight - frame.offsetTop - 10;
-  frame.style.height = remainingHeight + "px";
-}
-
-window.onresize = resizeFrame;
-</script>
-<title>Leonhard Euler's Magic Square</title>
+<title>Leonhard Euler's Magic Square - Main menu</title>
 </head>
-<body onload="resizeFrame()">
-<center>
-Leonhard Euler's Magic Square<br />
-&bull;
-<a target="iframe" href="menu.html">Menu</a> &bull;
-<a target="iframe" href="rules.html">Rules</a> &bull;
-<a target="iframe" href="info.html">Info</a> &bull;
-<a target="iframe" href="license.html">License</a> &bull;
-</center>
-<iframe src="menu.html" name="iframe" id="iframe" />
+<body>
+<table style="table-layout:fixed">
+  <caption style="caption-side:top">Game board width and height sized...</caption>
+  <tr>
+    <td align="center"><a target="_top" href="gameboard.html?size=10">10 tiles</a></td>
+    <td align="center"><a target="_top" href="gameboard.html?size=9">9 tiles</a></td>
+    <td align="center"><a target="_top" href="gameboard.html?size=8">8 tiles</a></td>
+    <td align="center"><a target="_top" href="gameboard.html?size=7">7 tiles</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a target="_top" href="gameboard.html?size=6">6 tiles</a></td>
+    <td align="center"><a target="_top" href="gameboard.html?size=5">5 tiles</a></td>
+    <td align="center"><a target="_top" href="gameboard.html?size=4">4 tiles</a></td>
+    <td align="center"><a target="_top" href="gameboard.html?size=3">3 tiles</a></td>
+  </tr>
+    <td align="center"><a target="_top" href="gameboard.html?size=2">2 tiles</a></td>
+    <td align="center"><a target="_top" href="gameboard.html?size=1">1 tile</a></td>
+  <tr>
+  </tr>
+</table>
+    <ul>
+      <li>Board sized 1 tile is trivial since it's already solved by setting the tile on the board! Nothing to do actually.</li>
+      <li>Solving in size of 2 tiles is obviously impossible.</li>
+      <li>Board size 6 tiles is impossible to solve, too. But why? Can you explain?</li>
+    </ul>
+  </ul>
+</p>
 </body>
 </html>
 
