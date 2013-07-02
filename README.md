@@ -13,16 +13,17 @@ Euler Square puzzle is running.
 It is tested to be installed and run on FirefoxOS (B2G) Emulator. Since
 it is using Mouse Events and does not handle Touch Events I assume that
 you might experience issues on some of the real world devices currently
-available. Following discussions of the community this is quite normal
-due to the active development and discussions how to map Touch to its
-eventing and mapping it onto Mouse Events at the same time. Ongoing
-discussion seems to be whether to increase compatibility to Desktop
-behavior or other widely accepted HTML driven embedded devices.
+available. Following discussion of the community this is quite normal
+due to the active development and discussions how to map Touch onto its
+own eventing and mapping it onto Mouse Events at the same time. Ongoing
+discussion seems to be whether to increase compatibility towards Desktop
+Firefox Browser behavior or other widely accepted HTML driven embedded
+devices in contrast.
 
 Beware: Spoiler
 ===============
 
-Do not look to close onto the next screenshot if you still plan to solve
+Do not look too closely onto the next screenshot if you still plan to solve
 the Euler Square puzzle of size 10x10 on your own from scratch.
 
 ![Do not look to close](/doc/img/euler10b2g.png)
