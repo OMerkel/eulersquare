@@ -17,8 +17,9 @@ available. Following discussion of the community this is quite normal
 due to the active development and discussions how to map Touch onto its
 own eventing and mapping it onto Mouse Events at the same time. Ongoing
 discussion seems to be whether to increase compatibility towards Desktop
-Firefox Browser behavior or other widely accepted HTML driven embedded
-devices in contrast.
+Firefox Browser behavior with typical input device mouse or other
+widely accepted HTML driven embedded devices offering touchscreen as
+typical input device in contrast.
 
 Beware: Spoiler
 ===============
