@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Drag-and-Drop</title>
+<style type="text/css">
+#button { position:absolute;top:100px;left:100px;height:100px;width:100px;background:#ff8000;z-index:1; };
+</style>
+<script type="text/javascript">
+
+var selected = false;
+
+function eventHandler(event) {
+  // this.innerHTML = event.type;
+  
+  // this.innerHTML = event.clientX + "/" + event.clientY + "<br />" + event.type;
+  // this.innerHTML = event.touches[0].pageX + "/" + event.touches[0].pageY + "<br />" + event.type;;
+
+  switch(event.type) {
+    case "mousedown":
+    case "touchstart":
+      selected = true;
+      break;
+    case "mousemove":
+      if (selected) {
+        this.style.left = (event.clientX - 50) + "px";
+        this.style.top = (event.clientY - 50) + "px";
+      }
+      break;
+    case "touchmove":
+      if (selected) {
+        this.style.left = (event.touches[0].pageX - 50) + "px";
+        this.style.top = (event.touches[0].pageY - 50) + "px";
+      }
+      break;
+    case "mouseup":
+    case "touchend":
+      selected = false;
+      break;
+    default:
+      break;
+  }
+}
+
+function hello() {
+  // document.getElementById('status').innerHTML = "Init";
+
+  var button = document.getElementById("button");
+  button.onmousedown = eventHandler;
+  button.onmouseup= eventHandler;
+  button.onmousemove= eventHandler;
+  button.ontouchstart= eventHandler;
+  button.ontouchend= eventHandler;
+  button.ontouchmove= eventHandler;
+  button.onclick= eventHandler;
+}
+</script>
+</head>
+<body onload="hello();">
+<div id="status" />
+<div id="button" />
+</body>
+</html>
