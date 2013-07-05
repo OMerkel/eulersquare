@@ -1,63 +1,163 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Drag-and-Drop</title>
-<style type="text/css">
-#button { position:absolute;top:100px;left:100px;height:100px;width:100px;background:#ff8000;z-index:1; };
-</style>
-<script type="text/javascript">
+<head profile="http://dublincore.org/documents/dcq-html/">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="AUTHOR" content="Oliver Merkel" />
+<meta name="COPYRIGHT" content="Oliver Merkel" />
+<meta name="DC.creator" content="Oliver Merkel" />
+<meta name="DC.contributor" content="Oliver Merkel" />
+<meta name="DC.rights" content="
+  This software package has a mixed license model. If not otherwise stated
+  then the license applies as follows.
 
-var selected = false;
+  The [info.html background information section] contains descriptions
+  and hints on material used from other sources and creators and/or authors of related
+  items. Due to the fact that the related material and underlying principles are already
+  aged and been published several centuries ago these are in the public domain.
 
-function eventHandler(event) {
-  // this.innerHTML = event.type;
-  
-  // this.innerHTML = event.clientX + "/" + event.clientY + "<br />" + event.type;
-  // this.innerHTML = event.touches[0].pageX + "/" + event.touches[0].pageY + "<br />" + event.type;;
+  It occurs that in case of simple reproduction of material and usage of Creative
+  Commons alike licensing a more detailed license description can be found looking into
+  the given references mentioned.
 
-  switch(event.type) {
-    case "mousedown":
-    case "touchstart":
-      selected = true;
-      break;
-    case "mousemove":
-      if (selected) {
-        this.style.left = (event.clientX - 50) + "px";
-        this.style.top = (event.clientY - 50) + "px";
-      }
-      break;
-    case "touchmove":
-      if (selected) {
-        this.style.left = (event.touches[0].pageX - 50) + "px";
-        this.style.top = (event.touches[0].pageY - 50) + "px";
-      }
-      break;
-    case "mouseup":
-    case "touchend":
-      selected = false;
-      break;
-    default:
-      break;
+  Trademarks mentioned belong to their holders respectively and clearly and I solely
+  mention these in purpose of citation and referencing.
+
+  Created by Oliver Merkel on June 25th, 2013.
+
+  Copyright (c) 2013
+  @author Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de.
+  All rights reserved.
+
+  @version 1.0
+  @since   2013-06-25
+
+  @section LICENSE
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+
+  Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+
+  Neither the name of the project's author nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  _AS IS_ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+" />
+<title>Leonhard Euler's Magic Square - Game Board</title>
+<script>
+
+function requestParameter(param, defaultResult) {
+  result = defaultResult;
+  regex = new RegExp('[?&]'+encodeURIComponent(param)+'=([^&]*)');
+  param = regex.exec(location.search);
+  if (param) {
+    result = decodeURIComponent(param[1]);
+  }
+  return result;
+}
+
+tileColors = new Array("#ffc000", "#a0a0a0", "#ff0000", "#0000a0", "#505050",
+                       "#e0e0e0", "#008080", "#a000a0", "#700000", "#5050f0");
+
+size = parseInt(requestParameter('size', tileColors.length));
+if (size>tileColors.length) {
+  size = tileColors.length;
+}
+maxWidth=500;
+baseWidth = maxWidth<window.innerWidth?maxWidth:window.innerWidth;
+
+tileTotalSize = (baseWidth-30) / (size+(3<size?0:(1<size?1:2)));
+tileInnerSize = (tileTotalSize+1) / 2;
+
+document.write("<style type=\"text/css\">");
+document.write("#divboard {width:" + tileTotalSize + "px;height:" + tileTotalSize + "px;padding:0px;border:0px solid #aaaaaa;}");
+document.write("#divinner {width:" + (tileInnerSize-2) + "px;height:" + (tileInnerSize-2) + "px;border:1px solid #000000;}");
+document.write("td { border:1px solid #000;padding:0px;}");
+document.write("</style>");
+
+window.screen.mozLockOrientation("portrait");
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("Text",ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data=ev.dataTransfer.getData("Text");
+  if("divboard"==ev.target.getAttribute("id")) {
+    ev.target.appendChild(document.getElementById(data));
   }
 }
 
-function hello() {
-  // document.getElementById('status').innerHTML = "Init";
+function tile(id, frame, inner) {
+  var frameStyle = "style=\"width:" + tileInnerSize + "px;height:" + tileInnerSize + "px;"
+  frameStyle = frameStyle + "padding:" + ((tileTotalSize-tileInnerSize)/2) + "px;background:" + frame + "\"";
+  document.write("    <div id=\"" + id + "\" draggable=\"true\" ondragstart=\"drag(event)\" " + frameStyle + ">");
+  document.write("      <div id=\"divinner\" style=\"background:" + inner + "\">");
+  document.write("&nbsp;");
+  document.write("      </div>");
+  document.write("    </div>");
+}
 
-  var button = document.getElementById("button");
-  button.onmousedown = eventHandler;
-  button.onmouseup= eventHandler;
-  button.onmousemove= eventHandler;
-  button.ontouchstart= eventHandler;
-  button.ontouchend= eventHandler;
-  button.ontouchmove= eventHandler;
-  button.onclick= eventHandler;
+function fieldWithTile(id, frame, inner) {
+  document.write("<td>");
+  document.write("  <div id=\"divboard\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\">");
+  tile(id, frame, inner);
+  document.write("  </div>");
+  document.write("</td>");
+}
+
+function board() {
+  document.write("<table style=\"border-collapse:collapse;\">");
+  for (var y = 0; y < size; ++y) {
+    document.write("<tr>");
+    for (var x = 0; x < size; ++x) {
+      fieldWithTile("tile" + x + y, tileColors[y], tileColors[x]);
+    }
+    document.write("</tr>");
+  }
+  document.write("</table>");
 }
 </script>
 </head>
-<body onload="hello();">
-<div id="status" />
-<div id="button" />
+<body>
+<p><a href="index.html">Main menu</a></p>
+<script>board();</script>
+Spares
+<table>
+<tr>
+<script>
+spares = size<4 ? 3 : size-1;
+for (var n = 0; n < spares; ++n) {
+  document.write("<td>");
+  document.write("<div id=\"divboard\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"></div>");
+  document.write("</td>");
+}
+</script>
+</tr>
+<table>
 </body>
 </html>
+
