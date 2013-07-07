@@ -6,7 +6,7 @@ Leonhard Euler's Magic Square
 __Keywords:__ _Leonhard Euler, Euler Square, Euler'sches Quadrat,
 Magic Square, Javascript, Firefox OS, Geeksphone, Mobile device,
 Catherine the Great, Katharina die Große, 36 officers problem,
-Albrecht Dürer, Melencolia § I_
+thirty-six officers problem, Albrecht Dürer, Melencolia § I_
 
 
 Solve the puzzle on your own at http://omerkel.github.io/eulersquare/src/
