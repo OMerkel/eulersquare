@@ -112,11 +112,19 @@ var stage = new Kinetic.Stage({
   width: boardSize,
   height: boardSize + spareHeight,
 });
+
 var dragLayer = new Kinetic.Layer();
 
 {
   var layer = new Kinetic.Layer();
-
+  var spareRect = new Kinetic.Rect({
+    x: 0,
+    y: boardSize,
+    width: boardSize,
+    height: spareHeight,
+    fill: '#e0e0e0'
+  });
+  layer.add(spareRect);
   for(var y = 0; y < order; y++) {
     for(var x = 0; x < order; x++) {
       var group = new Kinetic.Group({
