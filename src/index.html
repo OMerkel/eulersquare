@@ -2,6 +2,7 @@
 <html>
 <head manifest="offline.appcache" profile="http://dublincore.org/documents/dcq-html/">
 <link rel="icon" href="http://omerkel.github.io/eulersquare/src/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="css/index.css" />
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
 <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -62,22 +63,10 @@
   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 " />
-<style type="text/css">
-body { margin:0px; padding:0px; background-color:#E0E0E0; }
-iframe { margin:0px; padding:0px; border:none; width:100% }
-</style>
-<script type="text/javascript">
-function resizeFrame() {
-  frame = document.getElementById('iframe');
-  remainingHeight = window.innerHeight - frame.offsetTop - 10;
-  frame.style.height = remainingHeight + "px";
-}
-
-window.onresize = resizeFrame;
-</script>
+<script src="js/index.js" defer="defer"></script>
 <title>Leonhard Euler's Magic Square</title>
 </head>
-<body onload="resizeFrame()">
+<body>
 <center>
 Leonhard Euler's Magic Square<br />
 &bull;
@@ -89,4 +78,3 @@ Leonhard Euler's Magic Square<br />
 <iframe src="menu.html" name="iframe" id="iframe" />
 </body>
 </html>
-

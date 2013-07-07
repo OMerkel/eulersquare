@@ -1,12 +1,17 @@
 CACHE MANIFEST
 # v1.0
 /css/content.css
+/css/gameboard.css
+/css/index.css
 /img/albrecht_duerer_-_melencolia_i_detail.jpg
 /img/euler10x10.png
 /img/katharina_die_grosse.jpg
 /img/leonhardeulerhandmann.jpg
 /img/melencolia_i_durero.jpg
 /js/lib/kinetic-v4.5.4.min.js
+/js/gameboard.js
+/js/index.js
+/js/info.js
 /gameboard.html
 /index.html
 /info.html
