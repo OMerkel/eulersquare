@@ -1,163 +1,196 @@
 <!DOCTYPE HTML>
 <html>
-<head profile="http://dublincore.org/documents/dcq-html/">
-<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
-<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="AUTHOR" content="Oliver Merkel" />
-<meta name="COPYRIGHT" content="Oliver Merkel" />
-<meta name="DC.creator" content="Oliver Merkel" />
-<meta name="DC.contributor" content="Oliver Merkel" />
-<meta name="DC.rights" content="
-  This software package has a mixed license model. If not otherwise stated
-  then the license applies as follows.
+  <head manifest="offline.appcache" profile="http://dublincore.org/documents/dcq-html/">
+    <link rel="icon" href="http://omerkel.github.io/eulersquare/src/favicon.ico" type="image/x-icon" />
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="AUTHOR" content="Oliver Merkel" />
+    <meta name="COPYRIGHT" content="Oliver Merkel" />
+    <meta name="DC.creator" content="Oliver Merkel" />
+    <meta name="DC.contributor" content="Oliver Merkel" />
+    <meta name="DC.rights" content="
+      This software package has a mixed license model. If not otherwise stated
+      then the license applies as follows.
+    
+      The [info.html background information section] contains descriptions
+      and hints on material used from other sources and creators and/or authors of related
+      items. Due to the fact that the related material and underlying principles are already
+      aged and been published several centuries ago these are in the public domain.
+    
+      It occurs that in case of simple reproduction of material and usage of Creative
+      Commons alike licensing a more detailed license description can be found looking into
+      the given references mentioned.
+    
+      Trademarks mentioned belong to their holders respectively and clearly and I solely
+      mention these in purpose of citation and referencing.
+    
+      Created by Oliver Merkel on June 25th, 2013.
+    
+      Copyright (c) 2013
+      @author Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de.
+      All rights reserved.
+    
+      @version 1.0
+      @since   2013-06-25
+    
+      @section LICENSE
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions
+      are met:
+    
+      Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    
+      Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    
+      Neither the name of the project's author nor the names of its
+      contributors may be used to endorse or promote products derived from
+      this software without specific prior written permission.
+    
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+      _AS IS_ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+      FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+      HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+      SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+      TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+      PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+      LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+      NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+      SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    " />
+    <title>Leonhard Euler's Magic Square - Game Board</title>
+    <style>
+      body { margin: 5px; padding: 5px; }
+      div#container { margin-top:5px; }
+    </style>
+  </head>
+  <body>
+    <a target="_top" href="index.html">Main menu</a>
+    <div id="container" />
+    <script src="js/lib/kinetic-v4.5.4.min.js"></script>
+    <script defer="defer">
 
-  The [info.html background information section] contains descriptions
-  and hints on material used from other sources and creators and/or authors of related
-  items. Due to the fact that the related material and underlying principles are already
-  aged and been published several centuries ago these are in the public domain.
+      function requestParameter(param, defaultResult) {
+        result = defaultResult;
+        regex = new RegExp('[?&]'+encodeURIComponent(param)+'=([^&]*)');
+        param = regex.exec(location.search);
+        if (param) {
+          result = decodeURIComponent(param[1]);
+        }
+        return result;
+      }
 
-  It occurs that in case of simple reproduction of material and usage of Creative
-  Commons alike licensing a more detailed license description can be found looking into
-  the given references mentioned.
+      // var tileColors = ['red', 'orange', 'yellow', 'green', 'blue', 'cyan', 'purple'];
+      var tileColors = new Array("#ffc000", "#a0a0a0", "#ff0000", "#0000a0", "#505050",
+                                 "#e0f0e0", "#00c080", "#a000a0", "#700000", "#5050f0");
+      var order = parseInt(requestParameter('size', tileColors.length));
+      if (order>tileColors.length) {
+        order = tileColors.length;
+      }
 
-  Trademarks mentioned belong to their holders respectively and clearly and I solely
-  mention these in purpose of citation and referencing.
+      function addTile(container, w, h, colorIndexFrame, colorIndexInner) {
+        var colorFrame = tileColors[colorIndexFrame];
+        var colorInner = tileColors[colorIndexInner];
 
-  Created by Oliver Merkel on June 25th, 2013.
+        var rectFrame = new Kinetic.Rect({
+          x: 0,
+          y: 0,
+          width: w,
+          height: h,
+          stroke: 'black',
+          strokeWidth: 1,
+          fill: colorFrame
+        });
 
-  Copyright (c) 2013
-  @author Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de.
-  All rights reserved.
+        container.add(rectFrame);
 
-  @version 1.0
-  @since   2013-06-25
+        var rectInner = new Kinetic.Rect({
+          x: w >> 2,
+          y: h >> 2,
+          width: w >> 1,
+          height: h >> 1,
+          stroke: 'black',
+          strokeWidth: 1,
+          fill: colorInner
+        });
 
-  @section LICENSE
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
+        container.add(rectInner);
+      }
 
-  Redistributions of source code must retain the above copyright notice,
-  this list of conditions and the following disclaimer.
+      var dimX = window.innerWidth - 20;
+      var dimY = ((window.innerHeight - 52)/ 4) * 3;
 
-  Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
+      var boardSize = dimX<dimY ? dimX : dimY
+      var spareHeight = boardSize / 3;
+      var tileSize = boardSize / order;
+      var halfTileSize = tileSize >> 1;
 
-  Neither the name of the project's author nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: boardSize,
+        height: boardSize + spareHeight,
+      });
+      var dragLayer = new Kinetic.Layer();
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  _AS IS_ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-" />
-<title>Leonhard Euler's Magic Square - Game Board</title>
-<script>
+      {
+        var layer = new Kinetic.Layer();
 
-function requestParameter(param, defaultResult) {
-  result = defaultResult;
-  regex = new RegExp('[?&]'+encodeURIComponent(param)+'=([^&]*)');
-  param = regex.exec(location.search);
-  if (param) {
-    result = decodeURIComponent(param[1]);
-  }
-  return result;
-}
+        for(var y = 0; y < order; y++) {
+          for(var x = 0; x < order; x++) {
+            var group = new Kinetic.Group({
+              draggable: true,
+              x: tileSize * x,
+              y: tileSize * y,
+            });
+            addTile(group,
+                    boardSize / (order * 1.04), boardSize / (order * 1.04),
+                    x, y);
+            layer.add(group);
+          }
+        }
 
-tileColors = new Array("#ffc000", "#a0a0a0", "#ff0000", "#0000a0", "#505050",
-                       "#e0e0e0", "#008080", "#a000a0", "#700000", "#5050f0");
+        stage.add(layer);
+      }
 
-size = parseInt(requestParameter('size', tileColors.length));
-if (size>tileColors.length) {
-  size = tileColors.length;
-}
-maxWidth=500;
-baseWidth = maxWidth<window.innerWidth?maxWidth:window.innerWidth;
+      stage.add(dragLayer);
 
-tileTotalSize = (baseWidth-30) / (size+(3<size?0:(1<size?1:2)));
-tileInnerSize = (tileTotalSize+1) / 2;
+      stage.on('mousedown touchstart', function(evt) {
+        var node = evt.targetNode.getParent();
+        var layer = node.getLayer();
+        
+        node.moveTo(dragLayer);
+        layer.draw();
+        node.startDrag();
+      });
 
-document.write("<style type=\"text/css\">");
-document.write("#divboard {width:" + tileTotalSize + "px;height:" + tileTotalSize + "px;padding:0px;border:0px solid #aaaaaa;}");
-document.write("#divinner {width:" + (tileInnerSize-2) + "px;height:" + (tileInnerSize-2) + "px;border:1px solid #000000;}");
-document.write("td { border:1px solid #000;padding:0px;}");
-document.write("</style>");
+      stage.on('dragend', function(evt) {
+        var node = evt.targetNode.getParent();
+        var layer = node.getLayer();
+        var mousePos = node.getStage().getMousePosition();
+        var newX = Math.floor((node.getAttr('x')+halfTileSize)/tileSize)*tileSize;
+        var newY = Math.floor((node.getAttr('y')+halfTileSize)/tileSize)*tileSize;
+        if (newX >= boardSize) {
+          newX = boardSize - tileSize;
+        }
+        else if (newX < 0) {
+          newX = 0;
+        }
+        if ( newY < 0) {
+          newY = 0;
+        }
 
-window.screen.mozLockOrientation("portrait");
-
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function drag(ev) {
-  ev.dataTransfer.setData("Text",ev.target.id);
-}
-
-function drop(ev) {
-  ev.preventDefault();
-  var data=ev.dataTransfer.getData("Text");
-  if("divboard"==ev.target.getAttribute("id")) {
-    ev.target.appendChild(document.getElementById(data));
-  }
-}
-
-function tile(id, frame, inner) {
-  var frameStyle = "style=\"width:" + tileInnerSize + "px;height:" + tileInnerSize + "px;"
-  frameStyle = frameStyle + "padding:" + ((tileTotalSize-tileInnerSize)/2) + "px;background:" + frame + "\"";
-  document.write("    <div id=\"" + id + "\" draggable=\"true\" ondragstart=\"drag(event)\" " + frameStyle + ">");
-  document.write("      <div id=\"divinner\" style=\"background:" + inner + "\">");
-  document.write("&nbsp;");
-  document.write("      </div>");
-  document.write("    </div>");
-}
-
-function fieldWithTile(id, frame, inner) {
-  document.write("<td>");
-  document.write("  <div id=\"divboard\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\">");
-  tile(id, frame, inner);
-  document.write("  </div>");
-  document.write("</td>");
-}
-
-function board() {
-  document.write("<table style=\"border-collapse:collapse;\">");
-  for (var y = 0; y < size; ++y) {
-    document.write("<tr>");
-    for (var x = 0; x < size; ++x) {
-      fieldWithTile("tile" + x + y, tileColors[y], tileColors[x]);
-    }
-    document.write("</tr>");
-  }
-  document.write("</table>");
-}
-</script>
-</head>
-<body>
-<p><a href="index.html">Main menu</a></p>
-<script>board();</script>
-Spares
-<table>
-<tr>
-<script>
-spares = size<4 ? 3 : size-1;
-for (var n = 0; n < spares; ++n) {
-  document.write("<td>");
-  document.write("<div id=\"divboard\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"></div>");
-  document.write("</td>");
-}
-</script>
-</tr>
-<table>
-</body>
+        if (newY<boardSize) {
+          node.setPosition(newX, newY);
+        }
+        else if(node.getAttr('y') < boardSize + 5){
+          node.setAttr('y', boardSize + 5);
+        }
+        layer.draw();
+      });
+    </script>
+  </body>
 </html>
-
