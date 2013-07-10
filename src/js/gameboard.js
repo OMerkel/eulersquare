@@ -115,8 +115,8 @@ var stage = new Kinetic.Stage({
 
 var dragLayer = new Kinetic.Layer();
 
+var boardLayer = new Kinetic.Layer();
 {
-  var layer = new Kinetic.Layer();
   var spareRect = new Kinetic.Rect({
     x: 0,
     y: boardSize,
@@ -124,7 +124,7 @@ var dragLayer = new Kinetic.Layer();
     height: spareHeight,
     fill: '#e0e0e0'
   });
-  layer.add(spareRect);
+  boardLayer.add(spareRect);
   for(var y = 0; y < order; y++) {
     for(var x = 0; x < order; x++) {
       var group = new Kinetic.Group({
@@ -135,22 +135,24 @@ var dragLayer = new Kinetic.Layer();
       addTile(group,
               boardSize / (order * 1.04), boardSize / (order * 1.04),
               x, y);
-      layer.add(group);
+      boardLayer.add(group);
     }
   }
 
-  stage.add(layer);
+  stage.add(boardLayer);
 }
 
 stage.add(dragLayer);
 
 stage.on('mousedown touchstart', function(evt) {
   var node = evt.targetNode.getParent();
-  var layer = node.getLayer();
-  
-  node.moveTo(dragLayer);
-  layer.draw();
-  node.startDrag();
+  if (node!=boardLayer) {
+    var layer = node.getLayer();
+    
+    node.moveTo(dragLayer);
+    layer.draw();
+    node.startDrag();
+  }
 });
 
 stage.on('dragend', function(evt) {
