@@ -4,7 +4,7 @@ figure { padding: 5px; margin: 0px; float: left; border: 1px solid #cccccc; bord
 figure img { border-radius: 7px 7px 0 0; }
 figure figcaption { padding: 2px 4px 2px 4px; background-color: #636363; color: #cccccc;
   font-style: italic; border-radius: 0 0 7px 7px; width: 248px; }
-td { border:1px solid #888888; border-radius: 9px; padding:15px; }
+td { border:1px solid #888888; border-radius: 9px; padding:15px 0px 15px 0px; }
 #frame { width: 40px; height: 40px; padding: 0px; margin: 2px;
   border: 1px solid #aaaaaa; background: #ffc000; }
 #inner {width: 18px; height: 18px; padding: 0px; margin: 10px;
