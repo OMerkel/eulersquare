@@ -100,10 +100,10 @@ function addTile(container, w, h, colorIndexFrame, colorIndexInner) {
 }
 
 var dimX = window.innerWidth - 20;
-var dimY = ((window.innerHeight - 52)/ 4) * 3;
+var dimY = ((window.innerHeight - 64)/ 4) * 3;
 
 var boardSize = dimX<dimY ? dimX : dimY
-var spareHeight = boardSize / 3;
+var spareHeight = (window.innerHeight - 64) - boardSize;
 var tileSize = boardSize / order;
 var halfTileSize = tileSize >> 1;
 
