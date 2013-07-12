@@ -12,7 +12,7 @@ thirty-six officers problem, Albrecht D&uuml;rer, Melencolia &sect; I_
 
 Solve the puzzle on your own at http://omerkel.github.io/eulersquare/src/
 (tested using Javascript in Desktop Firefox, Firefox OS Simulator, and
-mobile device like Geeksphone Keon and Peak)
+mobile device like Geeksphone Keon and Geeksphone Peak)
 
 To get [more detailed background information visit the
 info page](http://omerkel.github.io/eulersquare/src/info.html) while
@@ -20,13 +20,14 @@ Euler Square puzzle is running.
 
 ![Application as installed in FirefoxOS (B2G)](/doc/img/eulerb2g.png)
 
-It is tested to be installed and run on FirefoxOS (B2G) Emulator and
-Geeksphone Keon. Since some devices handle Mouse Events and
-Touch Events differently I assume that you might experience issues
-on some of the other real world devices currently
-available. Following discussion of the community this is quite normal
-due to the active development and discussions how to map Touch onto its
-own eventing and mapping it onto Mouse Events at the same time.
+It is tested to be installed and run on FirefoxOS (B2G) Emulator,
+Geeksphone Keon, and Geeksphone Peak mobile device.
+Since some devices handle Mouse Events and Touch Events differently
+I assume that you might experience issues on some of the other real
+world devices currently available. Following discussion of the
+community this is quite normal due to the active development and
+discussion on how to map Touch onto its own eventing and mapping
+it onto Mouse Events at the same time.
 
 Beware: Spoiler
 ===============
@@ -34,4 +35,8 @@ Beware: Spoiler
 Do not look too closely onto the next screenshot if you still plan to solve
 the Euler Square puzzle of size 10x10 on your own from scratch.
 
-![Do not look to close](/doc/img/euler10b2g.png)
+
+| <img height="256" ondragstart="return false;" alt="Screenshot of Euler Square in Firefox OS Simulator, own work, Oliver Merkel, Creative Commons Attribution-Share Alike license" src="/doc/img/euler10b2g.png" /> | <img height="256" ondragstart="return false;" alt="Euler Square of order seven on a Geeksphone Peak mobile device, own work, Oliver Merkel, Creative Commons Attribution-Share Alike license" src="/doc/img/euler_square_7_geeksphone_peak.jpg" /> |
+| --- | --- |
+| Screenshot of Euler Square in Firefox OS Simulator, own work, Oliver Merkel, Creative Commons Attribution-Share Alike license | Euler Square of order seven on a Geeksphone Peak mobile device, own work, Oliver Merkel, Creative Commons Attribution-Share Alike license |
+
