@@ -32,8 +32,8 @@ it onto Mouse Events at the same time.
 Beware: Spoiler
 ===============
 
-Do not look too closely onto the next screenshot if you still plan to solve
-the Euler Square puzzle of size 10x10 on your own from scratch.
+Do not look too closely onto the next screenshots if you still plan
+to solve the Euler Square puzzle on your own from scratch.
 
 
 | <img height="256" ondragstart="return false;" alt="Screenshot of Euler Square in Firefox OS Simulator, own work, Oliver Merkel, Creative Commons Attribution-Share Alike license" src="/doc/img/euler10b2g.png" /> | <img height="256" ondragstart="return false;" alt="Euler Square of order seven on a Geeksphone Peak mobile device, own work, Oliver Merkel, Creative Commons Attribution-Share Alike license" src="/doc/img/euler_square_7_geeksphone_peak.jpg" /> |
