@@ -12,6 +12,7 @@ CACHE MANIFEST
 /js/gameboard.js
 /js/index.js
 /js/info.js
+/js/menu.js
 /js/prerequisites.js
 /gameboard.html
 /index.html
