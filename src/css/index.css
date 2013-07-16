@@ -11,4 +11,4 @@ background-image: url(../img/buttonpanelright.png);
 background-size: 100%;
 table-layout: fixed;
 }
-#buttonleft { position: absolute; left: 0px; top: 0px; opacity: 0.5; }
+#buttonleft { position: absolute; left: -300px; top: 0px; opacity: 0.5; }
