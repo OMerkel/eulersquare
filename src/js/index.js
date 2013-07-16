@@ -108,6 +108,7 @@ function resizeFrame() {
   remainingHeight = window.innerHeight - frame.offsetTop - 10;
   frame.style.height = remainingHeight + "px";
   showMenu(false);
+  updateMenus();
 }
 
 window.onresize = resizeFrame;
