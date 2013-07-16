@@ -52,10 +52,62 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+function renderSize() {
+  sizeX = window.innerWidth / 6;
+  sizeY = window.innerHeight / 8;
+  size = sizeY < sizeX ? sizeY : sizeX
+  return size;
+}
+
+function showMenu(visible) {
+  size = renderSize();
+  menu = document.getElementById('buttonpanel');
+  menu.style.height = size + 'px';
+  menu.style.width = (5 * size) + 'px';
+  menu.style.left = (visible ? (window.innerWidth - 5 * size) : window.innerWidth ) + 'px';
+  menu.style.top = (window.innerHeight - size) + 'px';
+  menu.style.opacity = visible ? '0.9' : '0.0';
+
+  buttonLeft = document.getElementById('buttonleft');
+  buttonLeft.style.height = size + 'px';
+  buttonLeft.style.left = (window.innerWidth - size) + 'px';
+  buttonLeft.style.top = (window.innerHeight - size) + 'px';
+}
+
+function iframeGo(frameSrc) {
+  iframe.src=frameSrc;
+  // showMenu(false);
+}
+
+function updateMenus() {
+  buttonLeft = document.getElementById('buttonleft');
+  buttonLeft.addEventListener('click', function(ev) {
+    showMenu(true);
+  }, true);
+
+  buttonMenu = document.getElementById('buttonmenu');
+  buttonRules = document.getElementById('buttonrules');
+  buttonInfo = document.getElementById('buttoninfo');
+  buttonLicense = document.getElementById('buttonlicense');
+  buttonRight = document.getElementById('buttonright');
+
+  buttonMenu.addEventListener('click',
+    function(ev) { iframeGo('menu.html'); }, true);
+  buttonRules.addEventListener('click',
+    function(ev) { iframeGo('rules.html'); }, true);
+  buttonInfo.addEventListener('click',
+    function(ev) { iframeGo('info.html'); }, true);
+  buttonLicense.addEventListener('click',
+    function(ev) { iframeGo('license.html'); }, true);
+  buttonRight.addEventListener('click',
+    function(ev) { showMenu(false); }, true);
+}
+
 function resizeFrame() {
   frame = document.getElementById('iframe');
   remainingHeight = window.innerHeight - frame.offsetTop - 10;
   frame.style.height = remainingHeight + "px";
+  showMenu(false);
 }
 
 window.onresize = resizeFrame;
