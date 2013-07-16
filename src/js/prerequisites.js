@@ -55,6 +55,7 @@
 this.dummyCanvas=document.createElement('canvas');
 if (!!this.dummyCanvas.getContext) {
   document.write("<iframe src=\"menu.html\" name=\"iframe\" id=\"iframe\" />");
+  var iframe = document.getElementById('iframe');
 }
 else {
   document.write("Your browser does not support HTML5 canvas.");

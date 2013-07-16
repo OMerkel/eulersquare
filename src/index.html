@@ -67,14 +67,19 @@
 <title>Leonhard Euler's Magic Square</title>
 </head>
 <body>
-<center>
-Leonhard Euler's Magic Square<br />
-&bull;
-<a target="iframe" href="menu.html">Menu</a> &bull;
-<a target="iframe" href="rules.html">Rules</a> &bull;
-<a target="iframe" href="info.html">Info</a> &bull;
-<a target="iframe" href="license.html">License</a> &bull;
-</center>
+<div id="title" >
+  Leonhard Euler's Magic Square
+</div>
+<img id="buttonleft" src="img/buttonleft.png" onload="updateMenus();" />
+<table id="buttonpanel">
+  <tr>
+    <td id="buttonmenu"></td>
+    <td id="buttonrules"></td>
+    <td id="buttoninfo"></td>
+    <td id="buttonlicense"></td>
+    <td id="buttonright"></td>
+  </tr>
+</table>
 <noscript>
   <p>This HTML5 application depends on enabled Javascript capabilities in your browser.</p>
   <p>Please consider enabling Javascript if disabled through settings.</p>

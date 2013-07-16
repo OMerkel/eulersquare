@@ -1,3 +1,14 @@
 
-body { margin:0px; padding:0px; background-color:#E0E0E0; font-size: 7mm;}
+body { margin:0px; padding:0px; background-color:#E0E0E0; font-size:150%; overflow-x: hidden; }
 iframe { margin:0px; padding:0px; border:none; width:100% }
+#buttonpanel { position: absolute; left: 0px; top: 0px;
+-moz-transition: all 2s ease;
+-webkit-transition: all 2s ease;
+-ms-transition: all 2s ease;
+-o-transition: all 2s ease;
+transition: all 2s ease;
+background-image: url(../img/buttonpanelright.png);
+background-size: 100%;
+table-layout: fixed;
+}
+#buttonleft { position: absolute; left: 0px; top: 0px; opacity: 0.5; }
