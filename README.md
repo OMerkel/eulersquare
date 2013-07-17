@@ -20,14 +20,17 @@ Euler Square puzzle is running.
 
 ![Application as installed in FirefoxOS (B2G)](/doc/img/eulerb2g.png)
 
-It is tested to be installed and run on FirefoxOS (B2G) Emulator,
+It has been tested to install and run on Firefox OS (B2G) Emulator,
 Geeksphone Keon, and Geeksphone Peak mobile device.
 Since some devices handle Mouse Events and Touch Events differently
 I assume that you might experience issues on some of the other real
 world devices currently available. Following discussion of the
 community this is quite normal due to the active development and
 discussion on how to map Touch onto its own eventing and mapping
-it onto Mouse Events at the same time.
+it onto Mouse Events at the same time depending on specific device.
+Latest Firefox OS Emulator now simulates Touch Events. Earlier
+versions used mapped Mouse Events only. Code has been adapted to
+run on both.
 
 Beware: Spoiler
 ===============
