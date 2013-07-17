@@ -29,8 +29,8 @@ community this is quite normal due to the active development and
 discussion on how to map Touch onto its own eventing and mapping
 it onto Mouse Events at the same time depending on specific device.
 Latest Firefox OS Emulator now simulates Touch Events. Earlier
-versions used mapped Mouse Events only. Code has been adapted to
-run on both.
+versions still use mapped Mouse Events only. Code has been adapted
+to run on both.
 
 Beware: Spoiler
 ===============
