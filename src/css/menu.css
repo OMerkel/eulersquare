@@ -1,0 +1,24 @@
+
+body { background-color:#FFFFFF; background-image: url(../img/rostfaerbergasse.jpg); }
+figure { padding: 5px; margin: 0px; float: left; border: 2px solid #cccccc; border-radius: 9px; }
+figure img { border-radius: 7px 7px 0 0; }
+figure figcaption { padding: 2px 4px 2px 4px; background-color: #666; color: #fff;
+  font-style: italic; border-radius: 0 0 7px 7px; width: 248px; opacity: 0.8; }
+caption { color:#ddd; background-color:#111; opacity:0.8; border-radius: 20px 20px 0 0;
+  border: 1px solid #000; }
+table { background-color:#553; color:#fff ; opacity:0.8; 
+  border: 1px solid #000; }
+td { border:2px solid #ccc; border-radius: 9px; padding:15px 0px 15px 0px;
+  background-color:#222; color:#fff; opacity:0.8; }
+#frame { width: 40px; height: 40px; padding: 0px; margin: 2px;
+  border: 1px solid #aaa; background: #ffc000; }
+#inner {width: 18px; height: 18px; padding: 0px; margin: 10px;
+  border:1px solid #000; background: #00c080; }
+h1 { text-align:center; background-color:#520; color:#eee ; opacity:0.8; border-radius: 20px 20px 0 0 }
+h2 { text-align:center; background-color:#520; color:#eee ; opacity:0.8; border-radius: 20px 20px 0 0 }
+ul { background-color:#520; color:#fff ; opacity:0.8; border-radius: 0 0 20px 20px;
+  border: 1px solid #000; padding: 10px 10px 10px 30px; margin: 0; }
+p { background-color:#553; color:#fff ; opacity:0.8; border-radius: 4px 4px 4px 4px }
+a { background-color:#ddf; color:#008 ; opacity:0.95; border-radius: 4px 4px 4px 4px }
+
+
