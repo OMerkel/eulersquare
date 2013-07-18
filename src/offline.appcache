@@ -3,6 +3,7 @@ CACHE MANIFEST
 /css/content.css
 /css/gameboard.css
 /css/index.css
+/css/menu.css
 /img/albrecht_duerer_-_melencolia_i_detail.jpg
 /img/buttonleft.png
 /img/buttonpanelright.png
@@ -10,6 +11,7 @@ CACHE MANIFEST
 /img/katharina_die_grosse.jpg
 /img/leonhardeulerhandmann.jpg
 /img/melencolia_i_durero.jpg
+/img/rostfaerbergasse.jpg
 /js/lib/kinetic-v4.5.4.min.js
 /js/gameboard.js
 /js/index.js
