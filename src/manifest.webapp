@@ -6,6 +6,7 @@
 	"icons": {
 		"16": "/img/icons/euler-16.png",
 		"48": "/img/icons/euler-48.png",
+		"60": "/img/icons/euler-60.png",
 		"128": "/img/icons/euler-128.png"
 	},
 	"developer": {
