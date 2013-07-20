@@ -54,41 +54,41 @@
 
 link = document.getElementById('order10');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=10';
+  window.top.location.href = 'gameboard.html?order=10';
 }, true);
 link = document.getElementById('order9');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=9';
+  window.top.location.href = 'gameboard.html?order=9';
 }, true);
 link = document.getElementById('order8');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=8';
+  window.top.location.href = 'gameboard.html?order=8';
 }, true);
 link = document.getElementById('order7');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=7';
+  window.top.location.href = 'gameboard.html?order=7';
 }, true);
 link = document.getElementById('order6');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=6';
+  window.top.location.href = 'gameboard.html?order=6';
 }, true);
 link = document.getElementById('order5');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=5';
+  window.top.location.href = 'gameboard.html?order=5';
 }, true);
 link = document.getElementById('order4');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=4';
+  window.top.location.href = 'gameboard.html?order=4';
 }, true);
 link = document.getElementById('order3');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=3';
+  window.top.location.href = 'gameboard.html?order=3';
 }, true);
 link = document.getElementById('order2');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=2';
+  window.top.location.href = 'gameboard.html?order=2';
 }, true);
 link = document.getElementById('order1');
 link.addEventListener('click', function(ev){
-  window.top.location.href = 'gameboard.html?size=1';
+  window.top.location.href = 'gameboard.html?order=1';
 }, true);

@@ -52,6 +52,10 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// var tileColors = ['red', 'orange', 'yellow', 'green', 'blue', 'cyan', 'purple'];
+var tileColors = new Array("#ffc000", "#a0a0a0", "#ff0000", "#0000a0", "#505050",
+                           "#e0f0e0", "#00c080", "#a000a0", "#700000", "#5050f0");
+
 function requestParameter(param, defaultResult) {
   result = defaultResult;
   regex = new RegExp('[?&]'+encodeURIComponent(param)+'=([^&]*)');
@@ -62,120 +66,261 @@ function requestParameter(param, defaultResult) {
   return result;
 }
 
-// var tileColors = ['red', 'orange', 'yellow', 'green', 'blue', 'cyan', 'purple'];
-var tileColors = new Array("#ffc000", "#a0a0a0", "#ff0000", "#0000a0", "#505050",
-                           "#e0f0e0", "#00c080", "#a000a0", "#700000", "#5050f0");
-var order = parseInt(requestParameter('size', tileColors.length));
-if (order>tileColors.length) {
-  order = tileColors.length;
+function getOrder() {
+  order = parseInt(requestParameter('order', tileColors.length));
+  if (order>tileColors.length) {
+    order = tileColors.length;
+  }
+  return order;
 }
 
-function addTile(container, w, h, colorIndexFrame, colorIndexInner) {
-  var colorFrame = tileColors[colorIndexFrame];
-  var colorInner = tileColors[colorIndexInner];
+function getDimX() { return window.innerWidth - 20; }
+function getDimY() { return window.innerHeight - 68; }
 
-  var rectFrame = new Kinetic.Rect({
-    x: 0,
-    y: 0,
-    width: w,
-    height: h,
-    stroke: 'black',
-    strokeWidth: 1,
-    fill: colorFrame
-  });
-
-  container.add(rectFrame);
-
-  var rectInner = new Kinetic.Rect({
-    x: w >> 2,
-    y: h >> 2,
-    width: w >> 1,
-    height: h >> 1,
-    stroke: 'black',
-    strokeWidth: 1,
-    fill: colorInner
-  });
-
-  container.add(rectInner);
+function getBoardSize() {
+  dimX = getDimX();
+  dimY = getDimY() * 3 / 4;
+  return dimX<dimY ? dimX : dimY;
 }
 
-var dimX = window.innerWidth - 20;
-var dimY = ((window.innerHeight - 64)/ 4) * 3;
+function getSpareHeight(boardSize) {
+  return getDimY() - boardSize;
+}
 
-var boardSize = dimX<dimY ? dimX : dimY
-var spareHeight = (window.innerHeight - 64) - boardSize;
-var tileSize = boardSize / order;
-var halfTileSize = tileSize >> 1;
+var canvas;
+var ctx;
 
-var stage = new Kinetic.Stage({
-  container: 'container',
-  width: boardSize,
-  height: boardSize + spareHeight,
-});
+var order = getOrder();
+var boardSize;
+var spareHeight;
+var tileSize;
+var halfTileSize;
+var quarterTileSize;
 
-var dragLayer = new Kinetic.Layer();
+var xRel = 0.5;
+var yRel = 0.5;
+var dragTile = null;
+var dragPosX = 100;
+var dragPosY = 100;
 
-var boardLayer = new Kinetic.Layer();
-{
-  var spareRect = new Kinetic.Rect({
-    x: 0,
-    y: boardSize,
-    width: boardSize,
-    height: spareHeight,
-    fill: '#e0e0e0'
-  });
-  boardLayer.add(spareRect);
-  for(var y = 0; y < order; y++) {
-    for(var x = 0; x < order; x++) {
-      var group = new Kinetic.Group({
-        draggable: true,
-        x: tileSize * x,
-        y: tileSize * y,
-      });
-      addTile(group,
-              boardSize / (order * 1.04), boardSize / (order * 1.04),
-              x, y);
-      boardLayer.add(group);
+var tile = new Array(order*order);
+
+for(var x=0; x<order; x++) {
+  for(var y=0; y<order; y++) {
+    tile[x + order * y] = new Tile(x, y, tileColors[x], tileColors[y]);
+  }
+}
+
+function Tile(x, y, colorFrame, colorInner) {
+  this.colorFrame = colorFrame;
+  this.colorInner = colorInner;
+  this.boardX = x;
+  this.boardY = y;
+}
+
+Tile.prototype.set = function(x, y) {
+  this.boardX = x;
+  this.boardY = y;
+}
+
+Tile.prototype.getX = function() {
+  return tileSize * this.boardX;
+};
+
+Tile.prototype.getY = function() {
+  return tileSize * this.boardY;
+};
+
+Tile.prototype.draw = function() {
+  this.drawPos(this.getX(), this.getY());
+};
+
+Tile.prototype.drawPos = function(x, y) {
+  ctx.beginPath();
+  ctx.fillStyle = this.colorFrame;
+  ctx.rect( x, y, tileSize, tileSize);
+  ctx.fill();
+  ctx.lineWidth="1";
+  ctx.strokeStyle="#000";
+  ctx.stroke();
+  ctx.closePath();
+  ctx.beginPath();
+  ctx.fillStyle = this.colorInner;
+  ctx.rect( x + quarterTileSize,
+    y + quarterTileSize, halfTileSize, halfTileSize);
+  ctx.fill();
+  ctx.lineWidth="1";
+  ctx.strokeStyle="#000";
+  ctx.stroke();
+  ctx.closePath();
+};
+
+Tile.prototype.matchesPosition = function(x, y) {
+  return x < this.getX() + tileSize && x > this.getX() &&
+    y < this.getY() + tileSize && y > this.getY();
+}
+
+function rect( x, y, w, h, fillColor, stroke) {
+  ctx.beginPath();
+  ctx.fillStyle = fillColor;
+  ctx.rect( x, y, w, h);
+  ctx.fill();
+  if (stroke) {
+    ctx.lineWidth="1";
+    ctx.strokeStyle="#000";
+    ctx.stroke();
+  }
+  ctx.closePath();
+}
+
+function clear() {
+  ctx.clearRect(0, 0, boardSize, boardSize + spareHeight);
+}
+
+function init() {
+  resize();
+  return setInterval(draw, 10);
+}
+
+function draw() {
+  clear();
+  rect(0, 0, boardSize, boardSize + spareHeight, "#FAF7F8", true);
+  rect(0, boardSize, boardSize, spareHeight, "#ccc", true);
+  for(var i=0; i<tile.length; i++) {
+    tile[i].draw();
+  }
+  if (null != dragTile) {
+    dragTile.drawPos(dragPosX, dragPosY);
+  }
+}
+
+function grid() {
+  ctx.beginPath();
+  ctx.lineWidth="1";
+  ctx.strokeStyle="red";
+  ctx.rect(0,0,50,50);
+  ctx.rect(50,0,50,50);
+  ctx.rect(100,0,50,50);
+  ctx.rect(150,0,50,50);
+  ctx.rect(200,0,50,50);
+  ctx.rect(250,0,50,50);
+  ctx.rect(300,0,50,50);
+  ctx.rect(350,0,50,50);
+  ctx.rect(400,0,50,50);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+function getTileMatching(evt) {
+  evtX = evt.pageX - canvas.offsetLeft;
+  evtY = evt.pageY - canvas.offsetTop;
+  result = null;
+  newTile = new Array();
+  for(var i=tile.length-1; i>=0; --i) {
+    if( null == result &&
+      tile[i].matchesPosition(evtX, evtY)) {
+      result = tile[i];
+    }
+    else {
+      newTile[newTile.length] = tile[i];
     }
   }
-
-  stage.add(boardLayer);
+  tile = new Array();
+  for(var i=newTile.length-1; i>=0; --i) {
+    tile[tile.length] = newTile[i];
+  }
+  return result;
 }
 
-stage.add(dragLayer);
+function handlerMove(evt) {
+  if (null != dragTile){
+    dragPosX = evt.pageX - canvas.offsetLeft - halfTileSize;
+    dragPosY = evt.pageY - canvas.offsetTop - halfTileSize;
+  }
+}
 
-stage.on('mousedown touchstart', function(evt) {
-  var node = evt.targetNode.getParent();
-  if (node!=boardLayer) {
-    var layer = node.getLayer();
-    
-    node.moveTo(dragLayer);
-    layer.draw();
-    node.startDrag();
-  }
-});
+function mouseMove(evt) {
+  handlerMove(evt);
+}
 
-stage.on('dragend', function(evt) {
-  var node = evt.targetNode.getParent();
-  var layer = node.getLayer();
-  var mousePos = node.getStage().getMousePosition();
-  var newX = Math.floor((node.getAttr('x')+halfTileSize)/tileSize)*tileSize;
-  var newY = Math.floor((node.getAttr('y')+halfTileSize)/tileSize)*tileSize;
-  if (newX >= boardSize) {
-    newX = boardSize - tileSize;
-  }
-  else if (newX < 0) {
-    newX = 0;
-  }
-  if ( newY < 0) {
-    newY = 0;
-  }
+function touchMove(evt) {
+  handlerMove(evt.touches[0]);
+}
 
-  if (newY<boardSize) {
-    node.setPosition(newX, newY);
+function handlerSelect(evt, fkt) {
+  evtX = evt.pageX - canvas.offsetLeft;
+  evtY = evt.pageY - canvas.offsetTop;
+  if (null == dragTile) {
+    dragTile = getTileMatching(evt);
+    if (null != dragTile) {
+      dragPosX = evtX - halfTileSize;
+      dragPosY = evtY - halfTileSize;
+      if (fkt == mouseMove) canvas.onmousemove = fkt;
+      if (fkt == touchMove) canvas.ontouchmove = fkt;
+    }
   }
-  else if(node.getAttr('y') < boardSize + 5){
-    node.setAttr('y', boardSize + 5);
+}
+
+function mouseDown(evt) {
+  handlerSelect(evt, mouseMove);
+}
+
+function touchStart(evt) {
+  handlerSelect(evt.touches[0], touchMove);
+}
+
+function handlerRelease() {
+  x = dragPosX / tileSize;
+  y = dragPosY / tileSize;
+  xRound = Math.round(x);
+  yRound = Math.round(y);
+  if (0 <= xRound && xRound <= order && 0 <= yRound && yRound < order) {
+    if(xRound == order) xRound = order - 1;
+    if(yRound == order) yRound = order - 1;
+    dragTile.set(xRound, yRound);
+    tile[tile.length] = dragTile;
   }
-  layer.draw();
-});
+  else if (0 <= xRound && xRound <= order && yRound >= order) {
+    if (y < order + 0.2) y = order + 0.2;
+    if (x < 0) x = 0;
+    if (x > order - 1) x = order - 1;
+    yMax = (boardSize + spareHeight) / tileSize;
+    if (y >= yMax) y = yMax - 0.5;
+    dragTile.set(x, y);
+    tile[tile.length] = dragTile;
+  }
+  else {
+    tile[tile.length] = dragTile;
+  }
+  dragTile = null;
+}
+
+function mouseUp() {
+  handlerRelease();
+  canvas.onmousemove = null;
+}
+
+function touchEnd() {
+  handlerRelease();
+  canvas.ontouchmove = null;
+}
+
+function resize() {
+  boardSize = getBoardSize();
+  spareHeight = getSpareHeight(boardSize);
+  tileSize = boardSize / order;
+  halfTileSize = tileSize >> 1;
+  quarterTileSize = tileSize >> 2;
+  canvas = document.getElementById('canvas');
+  ctx = canvas.getContext('2d');
+  ctx.canvas.width = boardSize + 1;
+  ctx.canvas.height = (boardSize + spareHeight);
+  draw();
+}
+
+init();
+canvas.onmousedown = mouseDown;
+canvas.ontouchstart = touchStart;
+canvas.onmouseup = mouseUp;
+canvas.ontouchend = touchEnd;
+window.onresize = resize;
