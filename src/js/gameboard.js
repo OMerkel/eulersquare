@@ -177,11 +177,6 @@ function clear() {
   ctx.clearRect(0, 0, boardSize, boardSize + spareHeight);
 }
 
-function init() {
-  resize();
-  return setInterval(draw, 10);
-}
-
 function draw() {
   clear();
   rect(0, 0, boardSize, boardSize + spareHeight, "#FAF7F8", true);
@@ -237,6 +232,7 @@ function handlerMove(evt) {
     dragPosX = evt.pageX - canvas.offsetLeft - halfTileSize;
     dragPosY = evt.pageY - canvas.offsetTop - halfTileSize;
   }
+  draw();
 }
 
 function mouseMove(evt) {
@@ -259,6 +255,7 @@ function handlerSelect(evt, fkt) {
       if (fkt == touchMove) canvas.ontouchmove = fkt;
     }
   }
+  draw();
 }
 
 function mouseDown(evt) {
@@ -278,7 +275,6 @@ function handlerRelease() {
     if(xRound == order) xRound = order - 1;
     if(yRound == order) yRound = order - 1;
     dragTile.set(xRound, yRound);
-    tile[tile.length] = dragTile;
   }
   else if (0 <= xRound && xRound <= order && yRound >= order) {
     if (y < order + 0.2) y = order + 0.2;
@@ -287,12 +283,10 @@ function handlerRelease() {
     yMax = (boardSize + spareHeight) / tileSize;
     if (y >= yMax) y = yMax - 0.5;
     dragTile.set(x, y);
-    tile[tile.length] = dragTile;
   }
-  else {
-    tile[tile.length] = dragTile;
-  }
+  tile[tile.length] = dragTile;
   dragTile = null;
+  draw();
 }
 
 function mouseUp() {
@@ -318,7 +312,7 @@ function resize() {
   draw();
 }
 
-init();
+resize();
 canvas.onmousedown = mouseDown;
 canvas.ontouchstart = touchStart;
 canvas.onmouseup = mouseUp;
