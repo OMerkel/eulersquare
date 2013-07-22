@@ -2,6 +2,7 @@
 	"version": "1.0",
 	"name": "Euler Square",
 	"description": "Leonhard Euler's Magic Square",
+	"appcache_path": "/eulersquare/src/offline.appcache",
 	"launch_path": "/eulersquare/src/index.html",
 	"icons": {
 		"16": "/eulersquare/src/img/icons/euler-16.png",
