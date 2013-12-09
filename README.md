@@ -3,16 +3,15 @@ Euler Square
 
 Leonhard Euler's Magic Square
 
+As an __online solitaire game solve the puzzle on your own__ at http://omerkel.github.io/eulersquare/src/
+
+Alternatively get it from https://marketplace.firefox.com/app/euler-square/
+
 __Keywords:__ _Leonhard Euler, Euler Square, Euler'sches Quadrat,
 Magic Square, Graeco-Latin square, Griechisch-Lateinisches Quadrat,
 Javascript, Firefox OS, Geeksphone, Mobile device,
 Catherine the Great, Katharina die Gro&szlig;e, 36 officers problem,
 thirty-six officers problem, Albrecht D&uuml;rer, Melencolia &sect; I_
-
-
-As an __online solitaire game solve the puzzle on your own__ at http://omerkel.github.io/eulersquare/src/
-
-Alternatively get it from https://marketplace.firefox.com/app/euler-square/
 
 It has successfully been tested to run and/or install using Javascript in
 * Firefox OS (B2G) Simulator,
