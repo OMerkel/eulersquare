@@ -3,7 +3,7 @@ Euler Square
 
 Leonhard Euler's Magic Square
 
-As an __online solitaire game solve the puzzle on your own__ at http://omerkel.github.io/eulersquare/src/
+As an __online solitaire game solve the puzzle on your own__ at http://omerkel.github.io/eulersquare/src/plain
 
 Alternatively get it from https://marketplace.firefox.com/app/euler-square/
 
@@ -20,7 +20,7 @@ It has successfully been tested to run and/or install using Javascript in
 * Desktop Firefox, Chrome, MS IE10 Win8
 
 To get [more detailed background information visit the
-info page](http://omerkel.github.io/eulersquare/src/info.html) while
+info page](http://omerkel.github.io/eulersquare/src/plain/info.html) while
 Euler Square puzzle is running.
 
 | <img height="512" ondragstart="return false;" alt="Application as installed in FirefoxOS (B2G), own work, Oliver Merkel, Creative Commons Attribution-Share Alike license" src="/doc/img/eulerb2g.png" /> |
