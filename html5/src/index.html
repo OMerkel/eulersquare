@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head profile='http://dublincore.org/documents/dcq-html/'>
+  <link rel='icon' href='img/icons/favicon.ico' type='image/x-icon' />
+  <link rel='schema.DC' href='http://purl.org/dc/elements/1.1/' />
+  <link rel='schema.DCTERMS' href='http://purl.org/dc/terms/' />
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+  <meta charset='UTF-8' />
+  <meta name='AUTHOR' content='Oliver Merkel' />
+  <meta name='COPYRIGHT' content='Oliver Merkel' />
+  <meta name='DC.creator' content='Oliver Merkel' />
+  <meta name='DC.contributor' content='Oliver Merkel' />
+  <meta name='DC.rights' content="
+See file named LICENSE being part of the repository.
+
+Copyright (c) 2013
+@author Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de.
+All rights reserved.
+
+Logos, brands, and trademarks belong to their respective owners.
+
+All source code also including code parts written in HMTL, Javascript, CSS is under MIT License.
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the &quot;Software&quot;), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+If not otherwise stated all graphics (independent of its format) are licensed under
+    http://creativecommons.org/licenses/by-nc-sa/4.0
+    Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+" />
+  <title>Euler Square</title>
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <meta name='apple-mobile-web-app-status-bar-style' content='black' />
+  <link rel='apple-touch-icon' href='img/icons/euler-128.png' />
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+    name='viewport' />
+  <link rel='stylesheet' type='text/css' href='thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.css' />
+  <link rel='stylesheet' type='text/css' href='css/index.css' />
+  <script src='thirdparty/jquery-2.2.4.js' type='text/javascript'></script>
+  <script src='thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js' type='text/javascript'></script>
+  <script src='thirdparty/raphael-2.2.0/raphael.js' type='text/javascript'></script>
+  <script src='js/hmi.js' type='text/javascript' defer></script>
+</head>
+<body>
+<div data-role='page' data-theme='b' id='game-page' class='mybackground'>
+  <div data-role='header' data-position='fixed'>
+    <center id='myheader'>Euler Square</center>
+    <a href='#left-panel' id='customMenu' class='customMenu'
+      data-icon='custom' data-iconpos='notext'>Menu</a>
+  </div><!-- /header -->
+  <div role='main' class='mycontent ui-content'>
+    <noscript>
+      <p>This HTML5 application depends on enabled Javascript capabilities in your browser.</p>
+      <p>Please consider enabling Javascript if disabled through settings.</p>
+    </noscript>
+    <center>
+      <div id='board'></div>
+    </center>
+  </div><!-- /content -->
+  <div data-role='panel' id='left-panel' data-position='left'
+    data-display='overlay' data-theme='b'>
+    <ul data-role='listview' data-theme='b' data-divider-theme='d'
+      data-icon='false' data-global-nav='demos' class='jqm-list'>
+      <li data-icon='carat-l' data-rel='close'><a href='#'>Close Menu</a></li>
+      <li data-role='list-divider'>&nbsp;</li>
+      <li data-icon='refresh'><a id='restart'>Restart</a></li>
+      <li data-role='list-divider'>&nbsp;</li>
+      <li data-icon='info'><a href='#rules-page' data-rel='page'
+        data-transition='pop'>Rules&#8230;</a></li>
+      <li data-icon='info'><a href='#info-page' data-rel='page'
+        data-transition='pop'>Info&#8230;</a></li>
+      <li data-icon='grid'><a href='#options-menu' data-rel='page'
+        data-transition='slideup'>Options&#8230;</a></li>
+      <li data-icon='info'><a href='#about-page' data-rel='page'
+        data-transition='pop'>About&#8230;</a></li>
+    </ul>
+  </div><!-- /panel -->
+</div><!-- /page -->
+<div data-role='page' data-theme='b' id='rules-page'>
+  <div data-role='header'>
+    <a href='#' data-rel='back' id='customBackRules'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-right ui-btn-icon-notext ui-corner-all'>Back</a>
+    <h4>Rules</h4>
+  </div><!-- /header -->
+  <div role='main' class='ui-content'>
+    <br />
+    <p>Objective is to place bi-colored tiles onto
+      given board positions to match certain requirements as listed below.
+      The size of the squared board is measured by its width in tiles. The
+      size can be changed in the options menu. So if it is eight tiles
+      wide and high the squared board has 64 positions in total.
+      The amount of available different colors matches
+      the size of the board.
+      Each rectangular tile has a unique combination of a
+      <em>frame color</em> and an <em>inner color</em>.</p>
+    <center><div id="frame">
+      <div id="inner">
+      </div>
+    </div></center>
+    <p>Besides using the board positions for the tiles these can
+      temporarily be placed onto the spare area below the board. To solve
+      the puzzle all tiles have to be positioned on board so that&#8230;</p>
+    <ul>
+      <li>each frame color must occur exactly once per row and column and</li>
+      <li>each inner color must occur exactly once per row and column.</li>
+    </ul>
+    <br clear='all' />
+    <p>Have fun and enjoy the game&#8230;</p>
+    <a href='#' data-role='button' data-icon='back'
+      data-rel='back'>Back</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role='page' data-theme='b' id='info-page'>
+  <div data-role='header'>
+    <a href='#' data-rel='back' id='customBackInfo'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-right ui-btn-icon-notext ui-corner-all'>Back</a>
+    <h4>Info</h4>
+  </div><!-- /header -->
+  <div role='main' class='ui-content'>
+    <br />
+      <p>Mind that this background information section most likely
+        contains spoilers.</p>
+      <p>While this application is mixed licensed
+        the basic idea of magic squares is in the public domain. A famous sample
+        which is by far not the first magic square mentioned is an engraving
+        called <i>Melencolia &sect; I</i> by Albrecht D&uuml;rer. The magic square can
+        be found in the upper right of the engraving's print.
+        It is no real challenge to find even older magic squares
+        mentioned elsewhere.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="duerer"
+            alt="Melencolia &sect; I by Albrecht D&uuml;rer [Public domain], via Wikimedia Commons"
+            src="img/melencolia_i_durero.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Melencolia_I_%28Durero%29.jpg -->
+
+          <figcaption><em>Melencolia &sect; I by Albrecht D&uuml;rer [Public domain],
+          1514, Anhaltische Gem&auml;ldegalerie, Dessau, Germany, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>Anyway it is definitively a beautiful sample to understand that aesthetics
+        in search of perfection meets the language of mathematics and vice versa.
+        Remarkable that most likely by instance the lower middle two squares of the
+        magic square match the year of the engraving's creation.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="duererdetail"
+            alt="Magic square in Melencolia &sect; I by Albrecht D&uuml;rer [Public domain], via Wikimedia Commons"
+            src="img/albrecht_duerer_-_melencolia_i_detail.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Albrecht_D%C3%BCrer_-_Melencolia_I_%28detail%29.jpg -->
+
+          <figcaption><em>Magic square in Melencolia &sect; I by Albrecht D&uuml;rer [Public domain],
+          1514, Anhaltische Gem&auml;ldegalerie, Dessau, Germany, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>Besides that the magic behind D&uuml;rer's square is that the row sums,
+        column sums, and the diagonal sums are equal.</p>
+
+      <p>The magic squares found in this application are of different sizes.
+        The size equals the width in tiles. So if it is 8 tiles wide and high the
+        square has 64 positions. Each unique tile has two attributes as of inner
+        color and outer color. The amount of colors in the color palette used equals
+        the size of the square.</p>
+
+      <p>Now if instead of a color set you will use the natural numbers in
+        sequence beginning from 1 then the squares here can easily be transformed
+        into squares like the type of square used by D&uuml;rer. That could
+        already be the first spoiler. How to get these numbers easily? After
+        substitution of colors by numbers simply multiply the outer attribute's
+        number by the size of the square and add the inner attribute's number.
+        Et voil&agrave;...</p>
+
+      <p>This should fairly be still complex enough not spoiling everything,
+        I do hope.</p>
+
+      <p>The principle of overlaying two independed magic squares calling
+        them orthogonal (with representation of an outer and an inner color in
+        this game) has been well-known before Leonhard Euler dealt with the
+        related challenges. In literature these are referenced as Graeco Latin
+        squares. Often Latin letters and Greek letters have been used to
+        represent the two attributes (here inner and outer color).
+        If you deal with just one type of attribute thus ignoring
+        the other a specific related group of magic squares is called Latin
+        squares then.</p>
+
+      <p>Leonard Euler's achievement &mdash; again in the public
+        domain &mdash; is that he analyzed the method to solve such Graeco
+        Latin squares and came up with a conjecture on Graeco Latin squares.
+        The assumption basically has been that Graeco Latin squares sized
+        2+4&sdot;n &forall; n&isin;N (squares sized 2x2, 6x6, 10x10, et cetera)
+        can not be solved.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="euler"
+            alt="Leonhard Euler by Jakob Emanuel Handmann [Public domain], via Wikimedia Commons"
+            src="img/leonhardeulerhandmann.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Leonhard_Euler_by_Handmann_.png -->
+
+          <figcaption><em>Leonhard Euler by Jakob Emanuel Handmann [Public domain],
+          1753, Kunstmuseum Basel, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>There exists some legend about Catherine the Great asking Leonhard Euler
+        to find a solution to arrange 36 officers of six different ranks each rank from
+        six different regiments. Obviously the question is if the officers can be arranged
+        such that each rank and regiment is represented exactly once per row and per
+        column in a 6 times 6 square.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="catherine"
+            alt="Catherine II, the Great [Public domain], via Wikimedia Commons"
+            src="img/katharina_die_grosse.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Catherine_II_in_russian_costume.jpg -->
+
+          <figcaption><em>Catherine II, the Great, anonymous, after Stefano Torelli [Public domain],
+          approx. 1780, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>Back to the popular 10x10 version. Until mankind had at least a
+        published final proof on Euler's conjecture approximately
+        180 years and several publications dealing with the conjecture over and over
+        again went by. R.C. Bose, S.S. Shrikhande, and E.T. Parker published a
+        paper to proof Euler's conjecture to be incorrect on sizes 2+4&sdot;n &ge; 10
+        in 1960.</p>
+
+      <p>See <a target="_top" href="https://doi.org/10.4153/CJM-1960-016-5"><i>R.C. Bose,
+        S.S. Shrikhande, and E.T. Parker, Further results on the construction of
+        mutually orthogonal Latin squares and the falsity of Euler's conjecture,
+        Canadian Journal of Mathematics, 12(1960), pp. 189-203.</i></a></p>
+
+      <p>If not performing a hard mathematical proof but simple testing to find
+        solutions: approximately 15 years ago an average computer has been able
+        to render a single 10x10 solution for the square in a few seconds.
+        I personally have been able so far a few times in my life to
+        solve 10x10 manually, too. Although I have to admit that knowledge on
+        a certain existing symmetry or patterns of a specific solution
+        is indeed quite helpful. So do not look to close onto any solution
+        if you still want to solve it from scratch completely on your own.
+        But it is normal to experience that the puzzle is really a
+        braintwister and mindbender for sure then.</p>
+
+      <p>For those who solved it already: How many solutions are there in total?</p>
+
+      <div>
+        <figure>
+          <img width="256" id="euler10solved"
+            alt="Own solution on size 10x10"
+            src="img/euler10x10.png" />
+
+          <!-- source: own work -->
+
+          <figcaption><em>Own solution on size 10x10. Did you recognize the 3x3
+          square in the lower left and the remaining diagonal from lower left
+          to upper right here?</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>I heard about the puzzle for the first time from some guy who pointed
+        me to a print article published in <i>Scientific American</i> / <i>Spektrum
+        der Wissenschaft</i> magazine. By the way: Thank you, Robert!</p>
+
+      <p>Scientific American (or German publisher <i>Spektrum der Wissenschaft</i>)
+        used to offer a magnetic board with squared colored tiles to solve the
+        magic square puzzle. In case of looking if it is in stock anywhere then
+        remember its name. In German it has been called 'Gewonnen, Herr Euler!'
+        A great puzzle and lovely decoration to recommend, btw.</p>
+
+      <p>Feel free to give hints and feedback! You are welcome.</p>
+    <a href='#' data-role='button' data-icon='back'
+      data-rel='back'>Back</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role='page' data-theme='b' id='options-menu'>
+  <div data-role='header'>
+    <h1><small>Options</small></h1>
+    <a href='#' data-rel='back' id='customBackOptions'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-left ui-btn-icon-notext ui-corner-all'>Close</a>
+  </div><!-- /header -->
+  <div data-role='content'>
+    <br />
+    <p>Select game board width and height&#8230;</p>
+    <form>
+      <fieldset data-role='controlgroup'>
+        <legend>Size</legend>
+        <input type='range' id='size' min='1' max='10' step='1' value='10' />
+      </fieldset>
+    </form>
+  <ul>
+    <li>Board sized 1 tile is trivial since it's already solved by setting the tile on the board! Nothing to do actually.</li>
+    <li>Solving in size of 2 tiles is obviously impossible.</li>
+    <li>Board size 6 tiles is impossible to solve, too. But can you explain why?</li>
+  </ul>
+    <a href='#' id='customOkOptions' data-role='button' data-icon='check'
+      data-rel='back' data-theme='c'>Ok</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role='page' data-theme='b' id='about-page'>
+  <div data-role='header'>
+    <a href='#' data-rel='back' id='customBackAbout'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-right ui-btn-icon-notext ui-corner-all'>Back</a>
+    <h4>About Euler Square</h4>
+  </div><!-- /header -->
+  <div role='main' class='ui-content'>
+    <figure class='author' style='float: right;'>
+      <img src='img/oliver-1908.jpg' />
+      <figcaption>Oliver Merkel, <a rel='license'
+        href='http://creativecommons.org/licenses/by-nc-nd/4.0'
+        target='_blank'>cc-by-nc-nd 4.0</a>.</figcaption>
+    </figure>
+    <br />
+    <h3>Legal</h3>
+    <p>Copyright (c) 2013<br />
+    <b>@author</b> <em>Oliver Merkel</em>, Merkel(dot) Oliver(at) web(dot) de.<br />
+    All rights reserved.<br />
+    Logos, brands, and trademarks belong to their respective owners.</p>
+    <p>All source code also including code parts written in HMTL, Javascript, CSS is under MIT License.</p>
+    <h4>The MIT License (MIT)</h4>
+    <p>Copyright (c) 2013 Oliver Merkel, Merkel(dot) Oliver(at) web(dot)de</p>
+
+    <p>Permission is hereby granted, free of charge, to any person obtaining a copy of
+    this software and associated documentation files (the &quot;Software&quot;), to deal in
+    the Software without restriction, including without limitation the rights to
+    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:</p>
+
+    <p>The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.</p>
+
+    <p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+    <p>If not otherwise stated all graphics (independent of its format) are licensed under
+      <br /><a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0'
+      target='_blank'><img alt='Creative Commons License' style='border-width:0'
+      src='img/icons/cc_by_nc_sa.png' /></a><br />
+      <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0'
+      target='_blank'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+      International License</a>.
+    </p>
+
+    <div data-role='collapsible-set' data-theme='c' data-content-theme='d'
+      data-iconpos='right' data-collapsed-icon='arrow-l' data-expanded-icon='arrow-d'>
+    <div data-role='collapsible'>
+      <h4>Euler Square Principles and Concepts</h4>
+      <p><em>Euler Square</em> implements a solitaire game.</p>
+      <p>While this application is mixed licensed the basic idea of magic
+        squares and Graeco Latin squares are in the public domain.</p>
+      <p>The background <em>info</em> section contains descriptions
+        and hints on material used from other sources and creators
+        and/or authors of related items. Due to the fact that the related
+        material and underlying principles are already
+        aged and possibly been published several centuries ago
+        these are in the public domain.</p>
+      <p>It occurs that in case of simple reproduction of material and
+        usage of Creative Commons alike licensing a more detailed license
+        description can be found looking into the given references mentioned.</p>
+    </div><!-- collapsible -->
+    <div data-role='collapsible'>
+      <h4>Third Party Code Licenses</h4>
+      <p>This <b>Euler Square</b> implementation uses unmodified
+      independent code libraries provided by <em>third parties</em>.
+      Since their licenses might vary the corresponding information is
+      <em>externally linked</em> below. Thus <em>these external links</em>
+      will enable you to reproduce any copyright notice,
+      any related list of conditions, disclaimers, and especially
+      the copyright holders and authors of the corresponding third
+      party functionality.</p>
+      <a href='https://github.com/jquery/jquery' data-role='button' data-theme='c'
+        rel='external' target='_blank' type='text/html'
+        title='jQuery - Repository'>
+        <img src='thirdparty/jquery-favicon.ico' width='16' height='16' />
+        jQuery: MIT</a>
+      <a href='https://github.com/jquery/jquery-mobile' data-role='button' data-theme='c'
+        rel='external' target='_blank' type='text/html'
+        title='jQuery Mobile - Repository'>
+        <img src='thirdparty/jquery.mobile-1.4.5/demos/favicon.ico' width='16' height='16' />
+        jQuery Mobile: MIT</a>
+      <a href='https://github.com/DmitryBaranovskiy/raphael' data-role='button' data-theme='c'
+        rel='external' target='_blank' type='text/html'
+        title='Raphaël - Repository'>
+        <img src='thirdparty/raphael-2.2.0/raphael_logo.png' width='16' height='16' />
+        Raphaël: MIT</a>
+    </div><!-- collapsible -->
+    </div><!-- collapsible-set -->
+    <a href='#' data-role='button' data-icon='back'
+      data-rel='back'>Back</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+</body>
+</html>

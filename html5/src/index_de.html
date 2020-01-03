@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head profile='http://dublincore.org/documents/dcq-html/'>
+  <link rel='icon' href='img/icons/favicon.ico' type='image/x-icon' />
+  <link rel='schema.DC' href='http://purl.org/dc/elements/1.1/' />
+  <link rel='schema.DCTERMS' href='http://purl.org/dc/terms/' />
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+  <meta charset='UTF-8' />
+  <meta name='AUTHOR' content='Oliver Merkel' />
+  <meta name='COPYRIGHT' content='Oliver Merkel' />
+  <meta name='DC.creator' content='Oliver Merkel' />
+  <meta name='DC.contributor' content='Oliver Merkel' />
+  <meta name='DC.rights' content="
+See file named LICENSE being part of the repository.
+
+Copyright (c) 2013
+@author Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de.
+All rights reserved.
+
+Logos, brands, and trademarks belong to their respective owners.
+
+All source code also including code parts written in HMTL, Javascript, CSS is under MIT License.
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the &quot;Software&quot;), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+If not otherwise stated all graphics (independent of its format) are licensed under
+    http://creativecommons.org/licenses/by-nc-sa/4.0
+    Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+" />
+  <title>Euler Square - Euler'sches Quadrat</title>
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <meta name='apple-mobile-web-app-status-bar-style' content='black' />
+  <link rel='apple-touch-icon' href='img/icons/euler-128.png' />
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+    name='viewport' />
+  <link rel='stylesheet' type='text/css' href='thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.css' />
+  <link rel='stylesheet' type='text/css' href='css/index.css' />
+  <script src='thirdparty/jquery-2.2.4.js' type='text/javascript'></script>
+  <script src='thirdparty/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js' type='text/javascript'></script>
+  <script src='thirdparty/raphael-2.2.0/raphael.js' type='text/javascript'></script>
+  <script src='js/hmi.js' type='text/javascript' defer></script>
+</head>
+<body>
+<div data-role='page' data-theme='b' id='game-page' class='mybackground'>
+  <div data-role='header' data-position='fixed'>
+    <center id='myheader'>Euler Square - Euler'sches Quadrat</center>
+    <a href='#left-panel' id='customMenu' class='customMenu'
+      data-icon='custom' data-iconpos='notext'>Menü</a>
+  </div><!-- /header -->
+  <div role='main' class='mycontent ui-content'>
+    <noscript>
+      <p>This HTML5 application depends on enabled Javascript capabilities in your browser.</p>
+      <p>Please consider enabling Javascript if disabled through settings.</p>
+    </noscript>
+    <center>
+      <div id='board'></div>
+    </center>
+  </div><!-- /content -->
+  <div data-role='panel' id='left-panel' data-position='left'
+    data-display='overlay' data-theme='b'>
+    <ul data-role='listview' data-theme='b' data-divider-theme='d'
+      data-icon='false' data-global-nav='demos' class='jqm-list'>
+      <li data-icon='carat-l' data-rel='close'><a href='#'>Zurück</a></li>
+      <li data-role='list-divider'>&nbsp;</li>
+      <li data-icon='refresh'><a id='restart'>Neu</a></li>
+      <li data-role='list-divider'>&nbsp;</li>
+      <li data-icon='info'><a href='#rules-page' data-rel='page'
+        data-transition='pop'>Regeln&#8230;</a></li>
+      <li data-icon='info'><a href='#info-page' data-rel='page'
+        data-transition='pop'>Info&#8230;</a></li>
+      <li data-icon='grid'><a href='#options-menu' data-rel='page'
+        data-transition='slideup'>Optionen&#8230;</a></li>
+      <li data-icon='info'><a href='#about-page' data-rel='page'
+        data-transition='pop'>Über&#8230;</a></li>
+    </ul>
+  </div><!-- /panel -->
+</div><!-- /page -->
+<div data-role='page' data-theme='b' id='rules-page'>
+  <div data-role='header'>
+    <a href='#' data-rel='back' id='customBackRules'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-right ui-btn-icon-notext ui-corner-all'>Zurück</a>
+    <h4>Regeln</h4>
+  </div><!-- /header -->
+  <div role='main' class='ui-content'>
+    <br />
+    <p>Ziel ist es, die zweifarbigen Kacheln so auf den Spielbrettpositionen
+      anzuordnen, dass die unten gelisteten Bedingungen erfüllt werden.
+      Die Größe des quadratischen Spielbretts wird durch die Anzahl der
+      Felder pro Reihe angegeben. Diese Größe kann im Options-Menü verändert
+      werden. Wählt man beispielsweise eine Größe von acht Feldern, so besteht
+      das quadratische Spielbrett insgesamt aus 64 Positionen.
+      Die Anzahl der verfügbaren unterschiedlichen Farben entspricht immer
+      der Größe des Spielbretts. Jede der vorhandenen Kacheln
+      zeigt eine einmal vorhandene Kombination aus <em>Außenfarbe</em> und
+      <em>Innenfarbe</em>.</p>
+    <center><div id="frame">
+      <div id="inner">
+      </div>
+    </div></center>
+    <p>Außer die Kacheln auf die Spielbrettpositionen zu legen, können diese
+       auch zeitweise im freien Bereich neben dem Brett gelegt oder sortiert
+       werden. Um das Euler'sche Quadrat zu lösen, müssen alle Kacheln so auf
+       dem Spielbrett platziert werden, dass&#8230;</p>
+    <ul>
+      <li>jede Außenfarbe genau ein einziges Mal pro Reihe und Spalte vorkommt und</li>
+      <li>jede Innenfarbe genau ein einziges Mal pro Reihe und Spalte vorkommt.</li>
+    </ul>
+    <br clear='all' />
+    <p>Viel Spaß beim Rätseln&#8230;</p>
+    <a href='#' data-role='button' data-icon='back'
+      data-rel='back'>Zurück</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role='page' data-theme='b' id='info-page'>
+  <div data-role='header'>
+    <a href='#' data-rel='back' id='customBackInfo'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-right ui-btn-icon-notext ui-corner-all'>Zurück</a>
+    <h4>Info</h4>
+  </div><!-- /header -->
+  <div role='main' class='ui-content'>
+    <br />
+      <p>Bitte beachten, dass der folgende Text wahrscheinlich Hinweise auf die Lösungen
+        enthalten kann.</p>
+      <p>Während diese Applikation einem gemischten Lizenzmodell unterliegt, ist die Idee
+        oder Konzept eines magischen Quadrates gemeinfrei, also rechtlich nicht geschützt.
+        Ein namhaftes Beispiel, aber nicht das erste bekannte magische Quadrat, ist in
+        einem Kupferstich namens <i>Melencolia &sect; I</i> von Albrecht D&uuml;rer
+        gezeigt. Das magische Quadrat kann im rechten oberen Teil des Drucks vom
+        Kupferstich gefunden werden. Es sind durchaus aber auch ältere Darstellungen
+        von anderen magischen Quadraten bekannt.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="duerer"
+            alt="Melencolia &sect; I by Albrecht D&uuml;rer [Public domain], via Wikimedia Commons"
+            src="img/melencolia_i_durero.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Melencolia_I_%28Durero%29.jpg -->
+
+          <figcaption><em>Melencolia &sect; I von Albrecht D&uuml;rer [gemeinfrei],
+          1514, Anhaltische Gem&auml;ldegalerie, Dessau, Deutschland, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>Dürers Werk ist sicherlich ein schönes Beispiel, um zu zeigen, wie Ästhetik,
+        Kunst und die Sprache der Mathematik sich auf der Suche nach Perfektion ergänzen.
+        Erwähnenswert hierbei ist auch, dass, wahrscheinlich beabsichtigt, die untersten
+        mittleren zwei Quadrate des Magischen Quadrats die Jahreszahl der Entstehung des
+        Kupferstichs zeigen.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="duererdetail"
+            alt="Magic square in Melencolia &sect; I by Albrecht D&uuml;rer [Public domain], via Wikimedia Commons"
+            src="img/albrecht_duerer_-_melencolia_i_detail.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Albrecht_D%C3%BCrer_-_Melencolia_I_%28detail%29.jpg -->
+
+          <figcaption><em>Magisches Quadrat in Melencolia &sect; I von Albrecht D&uuml;rer [gemeinfrei],
+          1514, Anhaltische Gem&auml;ldegalerie, Dessau, Deutschland, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>Das zusätzlich magische an D&uuml;rers Quadrat ist, dass die Zeilensummen,
+        Spaltensummen und die Summen der Diagonalen einander gleichen.</p>
+
+      <p>Die magischen Quadrate in dieser Applikation haben unterschiedliche Größen.
+        Die Größe des quadratischen Spielbretts wird durch die Anzahl der
+        Felder pro Reihe angegeben. Beträgt die Größe acht Felder, so besteht
+        das quadratische Spielbrett insgesamt aus 64 Positionen, um zweifarbige
+        Kacheln darauf zu platzieren.
+        Die Anzahl der verfügbaren unterschiedlichen Farben entspricht immer
+        der Größe des Spielbretts. Jede der vorhandenen Kacheln
+        zeigt eine einmal vorhandene Kombination aus Außenfarbe und
+        Innenfarbe.</p>
+
+      <p>Benutzt man statt Farben als Attributsrepräsentation die Sequenz der
+        natürlichen Zahlen bei 1 beginnend, so können die Euler'schen Quadrate
+        auf einfache Weise in den bei Dürer gezeigten Typ magischer Quadrate
+        umgewandelt werden. Das könnte bereits ein wertvoller Lösungshinweis
+        sein. Wie bekommt man daraus die entsprechenden Zahlen? Nach der
+        Ersetzung der Farben durch natürliche Zahlen kann man die Zahl für die
+        Außenfarbe mit der Größe des Spielbretts multiplizieren und die Zahl
+        für die Innenfarbe addieren. Et voil&agrave;...</p>
+
+      <p>Das sollte immernoch kompliziert genug sein, um hiermit hoffentlich
+        nicht alles zu verraten.</p>
+
+      <p>Das Prinzip unabhängige magische Quadrate zu überlagern und dies
+        othogonal (durch Repräsentation der äußeren und inneren Farbe in diesem
+        Spiel) zu bezeichnen, war bereits bekannt, bevor Leonhard Euler dies
+        für sich thematisierte. In der Literatur findet man diese referenziert
+        als griechisch-latinische Quadrate. Die zwei Attribute werden dabei
+        häufig als lateinische und griechische Buchstaben gezeigt.
+        Blendet man das zweite Attribut aus, so spricht man von latinischen
+        Quadraten.</p>
+
+      <p>Ein Ergebnis Leonard Eulers &mdash; wieder gemeinfrei &mdash; ist es,
+        dass er Methoden untersuchte, solche griechisch-latinischen Qadrate zu
+        lösen. Dabei vermutete er, dass griechisch-latinische Qadrate der Größen
+        2+4&sdot;n &forall; n&isin;N (also 2x2, 6x6, 10x10, et cetera)
+        keine Lösung besitzen.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="euler"
+            alt="Leonhard Euler by Jakob Emanuel Handmann [Public domain], via Wikimedia Commons"
+            src="img/leonhardeulerhandmann.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Leonhard_Euler_by_Handmann_.png -->
+
+          <figcaption><em>Leonhard Euler von Jakob Emanuel Handmann [gemeinfrei],
+          1753, Kunstmuseum Basel, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>Es gibt die Legende, dass Katharina die Große einst Leonhard Euler bat,
+        eine Lösung zu finden, wie 36 Offiziere von jeweils sechs verschiedenen Rängen
+        und von sechs verschiedenen Regimenten, so aufgestellt werden könnten,
+        so dass, jeder Rang und jedes Regiment, in einem Quadrat der Größe
+        6 aufgestellt, pro Reihe und Spalte exakt einmal vorkommen.</p>
+
+      <div>
+        <figure>
+          <img width="256" id="catherine"
+            alt="Catherine II, the Great [Public domain], via Wikimedia Commons"
+            src="img/katharina_die_grosse.jpg" />
+
+          <!-- source: http://commons.wikimedia.org/wiki/File:Catherine_II_in_russian_costume.jpg -->
+
+          <figcaption><em>Katharina II, die Große, unbekannter Künstler, nach
+          Stefano Torelli [gemeinfrei], ca. 1780, via Wikimedia Commons</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <p>Aber zurück zur populären 10x10 Version dieses Rätsels. Eulers Vermutung
+        wurde erst durch einen niedergeschriebenen abschließenden Beweis 180 Jahre
+        nach der Formulierung dieser Vermutung widerlegt, obwohl es wiederholt
+        zwischenzeitlich Versuche eines Beweises der Vermutung gab.
+        R.C. Bose, S.S. Shrikhande und E.T. Parker publizierten dann 1960 einen Beweis,
+        der Eulers Vermutung als inkorrekt für Größen 2+4&sdot;n &ge; 10
+        widerlegte.</p>
+
+      <p>Siehe <a target="_top" href="https://doi.org/10.4153/CJM-1960-016-5"><i>R.C. Bose,
+        S.S. Shrikhande, and E.T. Parker, Further results on the construction of
+        mutually orthogonal Latin squares and the falsity of Euler's conjecture,
+        Canadian Journal of Mathematics, 12(1960), pp. 189-203.</i></a></p>
+
+      <!-- p>
+      If not performing a hard mathematical proof but simple testing to find
+        solutions: approximately 15 years ago an average computer has been able
+        to render a single 10x10 solution for the square in a few seconds.
+        I personally have been able so far a few times in my life to
+        solve 10x10 manually, too. Although I have to admit that knowledge on
+        a certain existing symmetry or patterns of a specific solution
+        is indeed quite helpful. So do not look to close onto any solution
+        if you still want to solve it from scratch completely on your own.
+        But it is normal to experience that the puzzle is really a
+        braintwister and mindbender for sure then.</p -->
+
+      <p>Für denjenigen, der bereits Lösungen zum Euler'schen Quadrat gefunden hat: 
+       Wie viele Lösungen gibt es je Größe des Quadrats?</p>
+
+      <div>
+        <figure>
+          <img width="256" id="euler10solved"
+            alt="Own solution on size 10x10"
+            src="img/euler10x10.png" />
+
+          <!-- source: own work -->
+
+          <figcaption><em>Eine eigene Lösung der Größe 10x10. In der linken unteren
+          Ecke befindet sich ein vollständiges 3x3 Euler-Quadrat. Man beachte auch die restlichen
+          Positionen der großen Diagonalen mit gleicher Innen- und Außenfarbe</em></figcaption>
+        </figure>
+      </div>
+      <br clear="all" />
+
+      <!-- p>I heard about the puzzle for the first time from some guy who pointed
+        me to a print article published in <i>Scientific American</i> / <i>Spektrum
+        der Wissenschaft</i> magazine. By the way: Thank you, Robert!</p>
+
+      <p>Scientific American (or German publisher <i>Spektrum der Wissenschaft</i>)
+        used to offer a magnetic board with squared colored tiles to solve the
+        magic square puzzle. In case of looking if it is in stock anywhere then
+        remember its name. In German it has been called 'Gewonnen, Herr Euler!'
+        A great puzzle and lovely decoration to recommend, btw.</p -->
+
+      <!-- p>Feel free to give hints and feedback! You are welcome.</p -->
+      <p>Viel Spaß und frohes Rätseln...</p>
+    <a href='#' data-role='button' data-icon='back'
+      data-rel='back'>Zurück</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role='page' data-theme='b' id='options-menu'>
+  <div data-role='header'>
+    <h1><small>Optionen</small></h1>
+    <a href='#' data-rel='back' id='customBackOptions'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-left ui-btn-icon-notext ui-corner-all'>Zurück</a>
+  </div><!-- /header -->
+  <div data-role='content'>
+    <br />
+    <p>Wähle die Spielfeldgröße&#8230;</p>
+    <form>
+      <fieldset data-role='controlgroup'>
+        <legend>Größe</legend>
+        <input type='range' id='size' min='1' max='10' step='1' value='10' />
+      </fieldset>
+    </form>
+  <ul>
+    <li>Die Spielfeldgröße 1 ist trivial zu lösen, in dem die einzige Kachel auf das einzige Feld gelegt wird. Es ist eigentlich nichts zu tun.</li>
+    <li>Man erkennt schnell, dass die Spielfeldgröße 2 offensichtlich keine Lösung hat.</li>
+    <li>Auch die Spielfeldgröße 6 ist unlösbar. Aber wie ist das zu erklären?</li>
+  </ul>
+    <a href='#' id='customOkOptions' data-role='button' data-icon='check'
+      data-rel='back' data-theme='c'>Ok</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role='page' data-theme='b' id='about-page'>
+  <div data-role='header'>
+    <a href='#' data-rel='back' id='customBackAbout'
+      class='customBack ui-btn ui-icon-custom ui-btn-icon-right ui-btn-icon-notext ui-corner-all'>Zurück</a>
+    <h4>About Euler Square</h4>
+  </div><!-- /header -->
+  <div role='main' class='ui-content'>
+    <figure class='author' style='float: right;'>
+      <img src='img/oliver-1908.jpg' />
+      <figcaption>Oliver Merkel, <a rel='license'
+        href='http://creativecommons.org/licenses/by-nc-nd/4.0'
+        target='_blank'>cc-by-nc-nd 4.0</a>.</figcaption>
+    </figure>
+    <br />
+    <h3>Legal</h3>
+    <p>Copyright (c) 2013<br />
+    <b>@author</b> <em>Oliver Merkel</em>, Merkel(dot) Oliver(at) web(dot) de.<br />
+    All rights reserved.<br />
+    Logos, brands, and trademarks belong to their respective owners.</p>
+    <p>All source code also including code parts written in HMTL, Javascript, CSS is under MIT License.</p>
+    <h4>The MIT License (MIT)</h4>
+    <p>Copyright (c) 2013 Oliver Merkel, Merkel(dot) Oliver(at) web(dot)de</p>
+
+    <p>Permission is hereby granted, free of charge, to any person obtaining a copy of
+    this software and associated documentation files (the &quot;Software&quot;), to deal in
+    the Software without restriction, including without limitation the rights to
+    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:</p>
+
+    <p>The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.</p>
+
+    <p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+    <p>If not otherwise stated all graphics (independent of its format) are licensed under
+      <br /><a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0'
+      target='_blank'><img alt='Creative Commons License' style='border-width:0'
+      src='img/icons/cc_by_nc_sa.png' /></a><br />
+      <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0'
+      target='_blank'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+      International License</a>.
+    </p>
+
+    <div data-role='collapsible-set' data-theme='c' data-content-theme='d'
+      data-iconpos='right' data-collapsed-icon='arrow-l' data-expanded-icon='arrow-d'>
+    <div data-role='collapsible'>
+      <h4>Euler Square Principles and Concepts</h4>
+      <p><em>Euler Square</em> implements a solitaire game.</p>
+      <p>While this application is mixed licensed the basic idea of magic
+        squares and Graeco Latin squares are in the public domain.</p>
+      <p>The background <em>info</em> section contains descriptions
+        and hints on material used from other sources and creators
+        and/or authors of related items. Due to the fact that the related
+        material and underlying principles are already
+        aged and possibly been published several centuries ago
+        these are in the public domain.</p>
+      <p>It occurs that in case of simple reproduction of material and
+        usage of Creative Commons alike licensing a more detailed license
+        description can be found looking into the given references mentioned.</p>
+    </div><!-- collapsible -->
+    <div data-role='collapsible'>
+      <h4>Third Party Code Licenses</h4>
+      <p>This <b>Euler Square</b> implementation uses unmodified
+      independent code libraries provided by <em>third parties</em>.
+      Since their licenses might vary the corresponding information is
+      <em>externally linked</em> below. Thus <em>these external links</em>
+      will enable you to reproduce any copyright notice,
+      any related list of conditions, disclaimers, and especially
+      the copyright holders and authors of the corresponding third
+      party functionality.</p>
+      <a href='https://github.com/jquery/jquery' data-role='button' data-theme='c'
+        rel='external' target='_blank' type='text/html'
+        title='jQuery - Repository'>
+        <img src='thirdparty/jquery-favicon.ico' width='16' height='16' />
+        jQuery: MIT</a>
+      <a href='https://github.com/jquery/jquery-mobile' data-role='button' data-theme='c'
+        rel='external' target='_blank' type='text/html'
+        title='jQuery Mobile - Repository'>
+        <img src='thirdparty/jquery.mobile-1.4.5/demos/favicon.ico' width='16' height='16' />
+        jQuery Mobile: MIT</a>
+      <a href='https://github.com/DmitryBaranovskiy/raphael' data-role='button' data-theme='c'
+        rel='external' target='_blank' type='text/html'
+        title='Raphaël - Repository'>
+        <img src='thirdparty/raphael-2.2.0/raphael_logo.png' width='16' height='16' />
+        Raphaël: MIT</a>
+    </div><!-- collapsible -->
+    </div><!-- collapsible-set -->
+    <a href='#' data-role='button' data-icon='back'
+      data-rel='back'>Zurück</a>
+  </div><!-- /content -->
+</div><!-- /page -->
+</body>
+</html>

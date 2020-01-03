@@ -1,0 +1,22 @@
+{
+  "version": "1.1",
+  "name": "Euler Square",
+  "description": "Leonhard Euler's Magic Square",
+  "launch_path": "/eulersquare/html5/src/index.html",
+  "icons": {
+    "16": "/eulersquare/html5/src/img/icons/polyomino16.png",
+    "32": "/eulersquare/html5/src/img/icons/polyomino32.png",
+    "48": "/eulersquare/html5/src/img/icons/polyomino48.png",
+    "60": "/eulersquare/html5/src/img/icons/polyomino60.png",
+    "64": "/eulersquare/html5/src/img/icons/polyomino64.png",
+    "90": "/eulersquare/html5/src/img/icons/polyomino90.png",
+    "120": "/eulersquare/html5/src/img/icons/polyomino120.png",
+    "128": "/eulersquare/html5/src/img/icons/polyomino128.png",
+    "256": "/eulersquare/html5/src/img/icons/polyomino256.png"
+  },
+  "developer": {
+    "name": "Oliver Merkel",
+    "url": "https://github.com/OMerkel/eulersquare"
+  },
+  "installs_allowed_from": ["*"]
+}

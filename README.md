@@ -1,9 +1,11 @@
-Euler Square
-============
+<img alt="Euler Square icon" width="64" src="html5/src/img/icons/euler-64.png" /> Euler Square
+====================
 
 Leonhard Euler's Magic Square
 
-* As an __online solitaire game solve the puzzle on your own__ at http://omerkel.github.io/eulersquare/src/plain
+* <em>Start an</em> <b>Euler Square</b> <em>solitaire game and solve the puzzle on your own at</em>
+    * http://omerkel.github.io/eulersquare/html5/src
+    * http://omerkel.github.io/eulersquare/html5/src/index_de.html (German language)
 
 __Keywords:__ _Leonhard Euler, Euler Square, Euler'sches Quadrat,
 Magic Square, Graeco-Latin square, Griechisch-Lateinisches Quadrat,
@@ -11,9 +13,8 @@ Javascript, Firefox OS, Geeksphone, Mobile device,
 Catherine the Great, Katharina die Gro&szlig;e, 36 officers problem,
 thirty-six officers problem, Albrecht D&uuml;rer, Melencolia &sect; I_
 
-To get [more detailed background information visit the
-info page](http://omerkel.github.io/eulersquare/src/plain/info.html) while
-Euler Square puzzle is running.
+To get more detailed background information visit the
+info page while Euler Square puzzle is running.
 
 <table>
 <tr>
