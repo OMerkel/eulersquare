@@ -1,14 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Euler Square</title>
+  <style>
+    :root {
+      --bg-top: #f7fbf5;
+      --bg-bottom: #dbeaf6;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --ink: #1d2a3a;
+      --ink-soft: #41556d;
+      --accent: #1d6fa3;
+      --accent-strong: #155782;
+      --line: rgba(29, 42, 58, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "Candara", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.75), transparent 35%),
+        radial-gradient(circle at 86% 8%, rgba(29, 111, 163, 0.2), transparent 36%),
+        linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(16px, 3vw, 34px);
+      font-size: clamp(18px, 1.4vw + 12px, 24px);
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(900px, 100%);
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.14);
+      padding: clamp(18px, 3vw, 34px);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      letter-spacing: 0.03em;
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+      text-transform: uppercase;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: var(--ink-soft);
+      font-size: 0.95em;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    li {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.84);
+      padding: 12px 14px;
+    }
+
+    a {
+      color: var(--accent-strong);
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      li {
+        padding: 10px 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <ul>
-    <li>Start online version of <a href='../html5/src/index.html' target='_top'>Euler Square 1.1</a></li>
-    <li>Start online version of the older <a href='plain/index.html'>Euler Square 1.0</a></li>
-    <li>Visit <a href='https://github.com/OMerkel/eulersquare'>Euler Square @ GitHub</a></li>
-    <!-- li><a href='https://marketplace.firefox.com/app/euler-square/'>Euler Square @ Firefox Marketplace</a></li -->
-  </ul>
+  <main>
+    <h1>Euler Square</h1>
+    <p>Select a version to start:</p>
+    <ul>
+      <li>Start online version of <a href="../html5/src/index.html" target="_top">Euler Square 1.1</a></li>
+      <li>Start online version of the older <a href="plain/index.html">Euler Square 1.0</a></li>
+      <li>Visit <a href="https://github.com/OMerkel/eulersquare">Euler Square @ GitHub</a></li>
+      <!-- li><a href='https://marketplace.firefox.com/app/euler-square/'>Euler Square @ Firefox Marketplace</a></li -->
+    </ul>
+  </main>
 </body>
 </html>
