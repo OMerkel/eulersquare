@@ -1,0 +1,361 @@
+:root {
+	--bg-start: #e5eddc;
+	--bg-end: #b9d3e3;
+	--panel: rgba(251, 254, 248, 0.9);
+	--ink: #15212f;
+	--ink-soft: #435463;
+	--accent: #2f6f66;
+	--accent-deep: #255850;
+	--line: rgba(21, 33, 47, 0.14);
+	--board-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: "Candara", "Trebuchet MS", "Segoe UI", sans-serif;
+	color: var(--ink);
+	background:
+		radial-gradient(circle at 9% 11%, rgba(255, 255, 255, 0.7), transparent 36%),
+		radial-gradient(circle at 90% 4%, rgba(47, 111, 102, 0.24), transparent 33%),
+		linear-gradient(150deg, var(--bg-start), var(--bg-end));
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 18px;
+	overscroll-behavior-y: contain;
+}
+
+#app {
+	position: relative;
+	width: min(1080px, 100%);
+	background: var(--panel);
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	border-radius: 14px;
+	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+	padding: 16px 16px 22px;
+	overflow: hidden;
+}
+
+.titlebar {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 4px 2px 8px;
+	border-bottom: 1px solid var(--line);
+	margin-bottom: 12px;
+}
+
+.menu-btn {
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+	border: none;
+	background: #163046;
+	color: #fff;
+	font-size: 1.2rem;
+	font-weight: 700;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+}
+
+.menu-btn:hover {
+	filter: brightness(1.1);
+}
+
+h1 {
+	font-size: 1.25rem;
+	margin: 0;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+
+.title-spacer {
+	margin-left: auto;
+	color: var(--ink-soft);
+	font-weight: 700;
+}
+
+.controls {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+button {
+	border: none;
+	border-radius: 999px;
+	background: linear-gradient(120deg, var(--accent), var(--accent-deep));
+	color: white;
+	padding: 9px 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		transform 130ms ease,
+		filter 130ms ease;
+}
+
+button:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.06);
+}
+
+#status {
+	font-weight: 700;
+	min-height: 1.4em;
+	color: var(--ink-soft);
+}
+
+#playfield {
+	position: relative;
+	width: 100%;
+	height: 74vh;
+	min-height: 560px;
+	border-radius: 12px;
+	overflow: hidden;
+	background:
+		radial-gradient(
+			circle at 16% 10%,
+			rgba(255, 255, 255, 0.5),
+			transparent 40%
+		),
+		repeating-linear-gradient(
+			45deg,
+			rgba(0, 0, 0, 0.025),
+			rgba(0, 0, 0, 0.025) 9px,
+			rgba(255, 255, 255, 0.05) 9px,
+			rgba(255, 255, 255, 0.05) 18px
+		),
+		#d4dfcd;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#board {
+	position: absolute;
+	border: 2px solid #0f1d2c;
+	box-shadow: var(--board-shadow);
+	background-color: rgba(255, 255, 255, 0.72);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+#board-overlay {
+	position: absolute;
+	pointer-events: none;
+	user-select: none;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	opacity: 0.2;
+}
+
+.piece {
+	position: absolute;
+	cursor: grab;
+	touch-action: none;
+	user-select: none;
+	filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.3));
+}
+
+.piece.dragging {
+	cursor: grabbing;
+	filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.38));
+}
+
+.sidenav-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.28);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 180ms ease;
+	z-index: 10000;
+}
+
+.sidenav-backdrop.open {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.sidenav {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: min(320px, 84vw);
+	background: linear-gradient(180deg, #193247, #132434);
+	color: #f4fcff;
+	padding: 14px;
+	transform: translateX(-104%);
+	transition: transform 200ms ease;
+	z-index: 10010;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.sidenav.open {
+	transform: translateX(0);
+}
+
+.sidenav-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	padding-bottom: 8px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidenav-close {
+	border: none;
+	background: transparent;
+	color: #f4fcff;
+	cursor: pointer;
+	font-size: 1.35rem;
+}
+
+.nav-item {
+	width: 100%;
+	border: none;
+	border-radius: 10px;
+	text-align: left;
+	padding: 10px 12px;
+	background: rgba(255, 255, 255, 0.1);
+	color: #f4fcff;
+	font-size: 1rem;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.nav-item:hover {
+	background: rgba(255, 255, 255, 0.18);
+}
+
+.nav-icon {
+	display: inline-block;
+	width: 1.3rem;
+}
+
+.overlay-root {
+	position: absolute;
+	inset: 0;
+	background: rgba(6, 15, 24, 0.45);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 14px;
+	z-index: 10020;
+}
+
+.overlay-root[hidden] {
+	display: none;
+}
+
+.overlay-panel {
+	width: min(640px, 100%);
+	max-height: 84vh;
+	overflow: auto;
+	background: #f9fcff;
+	border-radius: 14px;
+	border: 1px solid rgba(23, 36, 52, 0.2);
+	box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+	padding: 14px;
+	position: relative;
+	z-index: 10030;
+}
+
+.overlay-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 8px;
+	margin-bottom: 10px;
+}
+
+.overlay-head h2 {
+	margin: 0;
+	font-size: 1.1rem;
+}
+
+.overlay-page {
+	display: none;
+	line-height: 1.5;
+}
+
+.overlay-page.active {
+	display: block;
+}
+
+.option-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(120px, 1fr));
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.option-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.option-field select {
+	padding: 8px;
+	border-radius: 8px;
+	border: 1px solid #9fb2c0;
+	font-size: 1rem;
+}
+
+.palette-legend {
+	margin: 8px 0 14px;
+}
+
+.palette-title {
+	margin: 0 0 8px;
+	font-weight: 700;
+	color: var(--ink-soft);
+}
+
+.palette-swatches {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
+	gap: 6px;
+}
+
+.palette-swatch {
+	height: 20px;
+	border-radius: 6px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 700px) {
+	#playfield {
+		min-height: 650px;
+		height: 82vh;
+	}
+
+	.controls {
+		margin-top: 4px;
+	}
+
+	.title-spacer {
+		display: none;
+	}
+
+	.option-grid {
+		grid-template-columns: 1fr;
+	}
+}

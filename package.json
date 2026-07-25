@@ -1,0 +1,25 @@
+{
+	"name": "eulersquare",
+	"version": "1.0.0",
+	"description": "* <em>Start an</em> <b>Euler Square</b> <em>solitaire game and solve the puzzle on your own at</em>\r     * http://omerkel.github.io/eulersquare/javascript/html5/1.2/src\r     * http://omerkel.github.io/eulersquare/javascript/html5/1.1/src\r     * http://omerkel.github.io/eulersquare/javascript/html5/1.1/src/index_de.html (German language)",
+	"main": "index.js",
+	"directories": {
+		"doc": "doc"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/OMerkel/eulersquare.git"
+	},
+	"keywords": [],
+	"type": "commonjs",
+	"bugs": {
+		"url": "https://github.com/OMerkel/eulersquare/issues"
+	},
+	"homepage": "https://github.com/OMerkel/eulersquare#readme",
+	"devDependencies": {
+		"markdownlint-cli": "^0.49.1"
+	}
+}
