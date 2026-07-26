@@ -39,6 +39,7 @@ body {
 	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
 	padding: 16px 16px 22px;
 	overflow: hidden;
+	touch-action: manipulation;
 }
 
 .titlebar {
@@ -122,6 +123,7 @@ button:hover {
 	min-height: 560px;
 	border-radius: 12px;
 	overflow: hidden;
+	touch-action: none;
 	background:
 		radial-gradient(
 			circle at 16% 10%,
