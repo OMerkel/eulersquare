@@ -1,51 +1,51 @@
 {
-	"name": "Euler Square Puzzle Studio",
-	"short_name": "Euler Square",
-	"description": "A single-player logic puzzle game built from square color tiles. Solve Graeco-Latin square arrangements with color uniqueness rules.",
-	"start_url": "./index.html",
-	"scope": "./",
-	"display": "standalone",
-	"theme_color": "#15212f",
-	"background_color": "#b9d3e3",
-	"orientation": "portrait-primary",
-	"icons": [
-		{
-			"src": "img/icons/euler-128.png",
-			"sizes": "128x128",
-			"type": "image/png",
-			"purpose": "any"
-		},
-		{
-			"src": "img/icons/euler-256.png",
-			"sizes": "256x256",
-			"type": "image/png",
-			"purpose": "any"
-		}
-	],
-	"categories": ["puzzle", "games"],
-	"developer": {
-		"name": "Oliver Merkel",
-		"url": "https://github.com/OMerkel"
-	},
-	"license": "MIT",
-	"author": {
-		"name": "Oliver Merkel",
-		"email": "Merkel.Oliver@web.de"
-	},
-	"shortcuts": [
-		{
-			"name": "New Game",
-			"short_name": "New Game",
-			"description": "Start a new Euler Square puzzle game",
-			"url": "./index.html?action=new",
-			"icons": [
-				{
-					"src": "img/icons/euler-90.png",
-					"sizes": "90x90",
-					"type": "image/png"
-				}
-			]
-		}
-	],
-	"prefer_related_applications": false
+  "name": "Euler Square Puzzle Studio",
+  "short_name": "Euler Square",
+  "description": "A single-player logic puzzle game built from square color tiles. Solve Graeco-Latin square arrangements with color uniqueness rules.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#15212f",
+  "background_color": "#b9d3e3",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "img/icons/euler-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/icons/euler-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["puzzle", "games"],
+  "developer": {
+    "name": "Oliver Merkel",
+    "url": "https://github.com/OMerkel"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Oliver Merkel",
+    "email": "Merkel.Oliver@web.de"
+  },
+  "shortcuts": [
+    {
+      "name": "New Game",
+      "short_name": "New Game",
+      "description": "Start a new Euler Square puzzle game",
+      "url": "./index.html?action=new",
+      "icons": [
+        {
+          "src": "img/icons/euler-90.png",
+          "sizes": "90x90",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
 }
