@@ -1,26 +1,52 @@
 // Service Worker for Euler Square PWA
 // Handles caching and offline support
 
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v3";
 const CACHE_NAME = `euler-square-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `euler-square-runtime-${CACHE_VERSION}`;
 
-// Assets to cache on install
-const STATIC_ASSETS = [
+const LOCAL_DEBUG_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
+const ENABLE_DEV_TEST_CACHE = LOCAL_DEBUG_HOSTS.has(self.location.hostname);
+
+// Core runtime assets for production/offline app usage.
+const CORE_STATIC_ASSETS = [
   "./",
   "./index.html",
   "./css/index.css",
   "./js/constants.js",
   "./js/ui-constants.js",
+  "./js/solver.js",
+  "./js/game-state.js",
+  "./js/board-renderer.js",
+  "./js/input-controller.js",
   "./js/hmi.js",
-  "./js/test/tests.js",
   "./img/icons/favicon.ico",
   "./manifest.json",
 ];
 
+// Developer-only test assets cached on localhost environments.
+const DEV_TEST_ASSETS = [
+  "./test/test-harness.js",
+  "./test/constants.tests.js",
+  "./test/ui-constants.tests.js",
+  "./test/solver.tests.js",
+  "./test/game-state.tests.js",
+  "./test/board-renderer.tests.js",
+  "./test/input-controller.tests.js",
+  "./test/hmi.tests.js",
+  "./test/tests.js",
+];
+
+const STATIC_ASSETS = ENABLE_DEV_TEST_CACHE
+  ? CORE_STATIC_ASSETS.concat(DEV_TEST_ASSETS)
+  : CORE_STATIC_ASSETS;
+
 // Install event - cache static assets
 self.addEventListener("install", (event) => {
   console.log("[Service Worker] Installing...");
+  console.log(
+    `[Service Worker] Dev test caching ${ENABLE_DEV_TEST_CACHE ? "enabled" : "disabled"}`,
+  );
 
   event.waitUntil(
     caches
@@ -102,8 +128,11 @@ self.addEventListener("fetch", (event) => {
             return response;
           })
           .catch(() => {
-            // Return offline fallback if available
-            return caches.match("./index.html");
+            // Only document requests should fallback to index HTML.
+            if (request.destination === "document") {
+              return caches.match("./index.html");
+            }
+            return Response.error();
           });
       }),
     );

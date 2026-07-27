@@ -352,8 +352,50 @@ If not otherwise stated all graphics (independent of its format) are licensed un
 	</main>
 	<script src="js/constants.js"></script>
 	<script src="js/ui-constants.js"></script>
+  <script src="js/solver.js"></script>
+  <script src="js/game-state.js"></script>
+  <script src="js/board-renderer.js"></script>
+  <script src="js/input-controller.js"></script>
 	<script src="js/hmi.js"></script>
-	<script src="test/tests.js"></script>
+  <script>
+    const _localDebugHosts = new Set(['localhost', '127.0.0.1', '[::1]']);
+    const _enableTests =
+      _localDebugHosts.has(window.location.hostname) ||
+      new URLSearchParams(window.location.search).get('tests') === '1';
+
+    if (_enableTests) {
+      const _testScripts = [
+        'test/test-harness.js',
+        'test/constants.tests.js',
+        'test/ui-constants.tests.js',
+        'test/solver.tests.js',
+        'test/game-state.tests.js',
+        'test/board-renderer.tests.js',
+        'test/input-controller.tests.js',
+        'test/hmi.tests.js',
+        'test/tests.js',
+      ];
+
+      const _loadScript = (src) =>
+        new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = src;
+          script.async = false;
+          script.onload = resolve;
+          script.onerror = () => reject(new Error(`Failed to load ${src}`));
+          document.body.appendChild(script);
+        });
+
+      (async () => {
+        for (const src of _testScripts) {
+          await _loadScript(src);
+        }
+        console.log('[Tests] Loaded module test suites');
+      })().catch((error) => {
+        console.error('[Tests] Failed to load test scripts:', error);
+      });
+    }
+  </script>
 	<script>
 		// Register Service Worker for PWA support
 		if ('serviceWorker' in navigator) {

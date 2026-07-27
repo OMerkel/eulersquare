@@ -1,0 +1,23 @@
+Starting Euler Square module tests...
+
+Suite: solver
+- exposesExpectedApi
+OK hasNoEulerSquareSolution exposed
+OK getGuideCombo exposed
+OK validateSolvedLayout exposed
+OK findSolveTargetForColors exposed
+- detectsNoSolutionSizes
+FAIL 2x2 flagged as no-solution
+OK 6x6 flagged as no-solution
+OK 5x5 allowed
+
+Suite: input-controller
+- exposesExpectedApi
+OK create exposed
+
+Suite: hmi-integration
+- requiredDomElementsExist
+OK playfield exists
+OK board exists
+OK board overlay exists
+OK status exists

@@ -13,6 +13,34 @@
     );
   }
 
+  const solver = window.EulerSquareSolver;
+  if (!solver) {
+    throw new Error(
+      "EulerSquareSolver missing. Load js/solver.js before js/hmi.js.",
+    );
+  }
+
+  const gameState = window.EulerSquareGameState;
+  if (!gameState) {
+    throw new Error(
+      "EulerSquareGameState missing. Load js/game-state.js before js/hmi.js.",
+    );
+  }
+
+  const boardRenderer = window.EulerSquareBoardRenderer;
+  if (!boardRenderer) {
+    throw new Error(
+      "EulerSquareBoardRenderer missing. Load js/board-renderer.js before js/hmi.js.",
+    );
+  }
+
+  const inputControllerModule = window.EulerSquareInputController;
+  if (!inputControllerModule) {
+    throw new Error(
+      "EulerSquareInputController missing. Load js/input-controller.js before js/hmi.js.",
+    );
+  }
+
   const {
     GRID_MIN,
     GRID_MAX,
@@ -74,7 +102,6 @@
   let overlayOpacity = 0;
   let pieces = [];
   let boardRect = null;
-  let puzzleTexture = null;
   let tileCombos = [];
   let pieceW = 0;
   let pieceH = 0;
@@ -84,12 +111,7 @@
   let gridCols = GRID_DEFAULT;
   let isSolving = false;
   const boardOccupancy = new Map();
-
-  const activeDrag = {
-    piece: null,
-    offsetX: 0,
-    offsetY: 0,
-  };
+  let inputController = null;
 
   function setStatus(msg) {
     statusEl.textContent = msg;
@@ -104,118 +126,55 @@
   }
 
   function saveGameState() {
-    const boardWidth = boardRect.width;
-    const boardHeight = boardRect.height;
-
-    const state = {
+    const state = gameState.createPersistedState({
       gridRows,
       gridCols,
-      boardWidth,
-      boardHeight,
-      tileCombos: tileCombos.map((row) =>
-        row.map((combo) => ({
-          outerColor: combo.outerColor,
-          innerColor: combo.innerColor,
-        })),
-      ),
-      pieces: pieces.map((piece) => {
-        const pieceData = {
-          row: piece.row,
-          col: piece.col,
-          placedRow: piece.placedRow,
-          placedCol: piece.placedCol,
-          solved: piece.solved,
-          outerColor: piece.outerColor,
-          innerColor: piece.innerColor,
-        };
+      boardRect,
+      tileCombos,
+      pieces,
+    });
 
-        // For placed tiles, store grid position; for others, store relative position
-        if (piece.placedRow === null || piece.placedCol === null) {
-          pieceData.relX = boardWidth > 0 ? piece.x / boardWidth : 0;
-          pieceData.relY = boardHeight > 0 ? piece.y / boardHeight : 0;
-        }
-
-        return pieceData;
-      }),
-    };
     localStorage.setItem("eulersquareState", JSON.stringify(state));
   }
 
   function restoreGameState() {
-    try {
-      const saved = localStorage.getItem("eulersquareState");
-      if (!saved) {
-        return false;
-      }
-
-      const state = JSON.parse(saved);
-      if (
-        !state.gridRows ||
-        !state.gridCols ||
-        !state.pieces ||
-        !state.tileCombos
-      ) {
-        return false;
-      }
-
-      gridRows = state.gridRows;
-      gridCols = state.gridCols;
-
-      // Restore the exact tile combinations (colors) that were used
-      tileCombos = state.tileCombos;
-      buildBoardLayout();
-      buildPieces();
-
-      // Restore piece positions and state
-      state.pieces.forEach((savedPiece, index) => {
-        if (index < pieces.length) {
-          const piece = pieces[index];
-          piece.placedRow = savedPiece.placedRow;
-          piece.placedCol = savedPiece.placedCol;
-          piece.solved = savedPiece.solved;
-
-          // For placed tiles, calculate position from grid coordinates
-          if (piece.placedRow !== null && piece.placedCol !== null) {
-            piece.x = boardRect.x + piece.placedCol * pieceW;
-            piece.y = boardRect.y + piece.placedRow * pieceH;
-            boardOccupancy.set(`${piece.placedRow}:${piece.placedCol}`, piece);
-            piece.canvas.style.zIndex = String(
-              1 + piece.placedRow * gridCols + piece.placedCol,
-            );
-            solvedCount += 1;
-          } else {
-            // For misplaced tiles, restore to scaled relative position
-            if (
-              savedPiece.relX !== undefined &&
-              savedPiece.relY !== undefined
-            ) {
-              piece.x = savedPiece.relX * boardRect.width;
-              piece.y = savedPiece.relY * boardRect.height;
-            }
-          }
-
-          piece.canvas.style.left = `${piece.x}px`;
-          piece.canvas.style.top = `${piece.y}px`;
-        }
-      });
-
-      if (solvedCount === pieces.length) {
-        const result = validateSolvedLayout();
-        if (result.solved) {
-          setStatus(STATUS_TEXT.solved);
-        } else {
-          setStatus(STATUS_TEXT.invalidSolved);
-        }
-      } else {
-        setStatus(
-          `${solvedCount}/${pieces.length} ${STATUS_TEXT.tilesPlacedSuffix}`,
-        );
-      }
-
-      return true;
-    } catch {
+    const rawState = localStorage.getItem("eulersquareState");
+    const state = gameState.parsePersistedState(rawState);
+    if (!state) {
       return false;
     }
+
+    gridRows = state.gridRows;
+    gridCols = state.gridCols;
+
+    // Restore the exact tile combinations (colors) that were used
+    tileCombos = state.tileCombos;
+    buildBoardLayout();
+    buildPieces();
+    boardOccupancy.clear();
+    solvedCount = gameState.restorePiecesFromSnapshot({
+      pieces,
+      snapshot: state.pieces,
+      boardRect,
+      pieceW,
+      pieceH,
+      gridCols,
+      boardOccupancy,
+      cellKey,
+    });
+
+    if (solvedCount === pieces.length) {
+      const result = validateSolvedLayout();
+      if (result.solved) {
+        setStatus(STATUS_TEXT.solved);
+      } else {
+        setStatus(STATUS_TEXT.invalidSolved);
+      }
+    } else {
+      setStatus(`${solvedCount}/${pieces.length} ${STATUS_TEXT.tilesPlacedSuffix}`);
+    }
+
+    return true;
   }
 
   function setGridSize(nextRows, nextCols) {
@@ -224,34 +183,24 @@
   }
 
   function hasNoEulerSquareSolution() {
-    return gridRows === gridCols && NO_SOLUTION_SIZES.has(gridRows);
+    return solver.hasNoEulerSquareSolution(
+      gridRows,
+      gridCols,
+      NO_SOLUTION_SIZES,
+    );
   }
 
   function getGuideCombo(row, col, palette) {
-    if (hasNoEulerSquareSolution()) {
-      return null;
-    }
-
-    const template = EVEN_GUIDE_TEMPLATES[gridRows];
-    if (template) {
-      return {
-        outerColor: palette[template.outer[row][col]],
-        innerColor: palette[template.inner[row][col]],
-      };
-    }
-
-    // For odd n, this affine pair creates a valid Euler-square guide.
-    if (gridRows % 2 === 1) {
-      const outerIndex = (row + col) % gridRows;
-      const innerIndex = (row + 2 * col) % gridRows;
-      return {
-        outerColor: palette[outerIndex],
-        innerColor: palette[innerIndex],
-      };
-    }
-
-    // Fallback for supported even orders keeps guide consistent with current tile layout.
-    return tileCombos[row][col];
+    return solver.getGuideCombo({
+      row,
+      col,
+      gridRows,
+      gridCols,
+      palette,
+      evenGuideTemplates: EVEN_GUIDE_TEMPLATES,
+      noSolutionSizes: NO_SOLUTION_SIZES,
+      fallbackCombos: tileCombos,
+    });
   }
 
   function cellKey(row, col) {
@@ -426,46 +375,29 @@
     for (const piece of unplacedPieces) {
       const { outerColor, innerColor } = piece;
 
-      // Find the grid position where this tile's colors belong according to guide
-      let targetRow = -1;
-      let targetCol = -1;
+      const target = solver.findSolveTargetForColors({
+        outerColor,
+        innerColor,
+        gridRows,
+        gridCols,
+        boardOccupancy,
+        cellKey,
+        getGuideComboForCell: (row, col) => getGuideCombo(row, col, palette),
+      });
 
-      for (let row = 0; row < gridRows; row += 1) {
-        for (let col = 0; col < gridCols; col += 1) {
-          const key = cellKey(row, col);
-          if (boardOccupancy.has(key)) {
-            continue; // Position already occupied
-          }
-
-          const guideCombo = getGuideCombo(row, col, palette);
-          if (
-            guideCombo &&
-            guideCombo.outerColor === outerColor &&
-            guideCombo.innerColor === innerColor
-          ) {
-            targetRow = row;
-            targetCol = col;
-            break;
-          }
-        }
-        if (targetRow !== -1) {
-          break;
-        }
-      }
-
-      if (targetRow === -1) {
+      if (!target) {
         console.log(
           `Cannot place tile with colors outer:${outerColor} inner:${innerColor} - no matching guide position available`,
         );
         continue;
       }
 
-      const key = cellKey(targetRow, targetCol);
-      const targetX = boardRect.x + targetCol * pieceW;
-      const targetY = boardRect.y + targetRow * pieceH;
+      const key = cellKey(target.row, target.col);
+      const targetX = boardRect.x + target.col * pieceW;
+      const targetY = boardRect.y + target.row * pieceH;
 
       console.log(
-        `Placing tile to [${targetRow}, ${targetCol}] from (${piece.x}, ${piece.y}) to (${targetX}, ${targetY})`,
+        `Placing tile to [${target.row}, ${target.col}] from (${piece.x}, ${piece.y}) to (${targetX}, ${targetY})`,
       );
 
       await animatePieceToPosition(piece, targetX, targetY, animationDuration);
@@ -473,11 +405,11 @@
       piece.x = targetX;
       piece.y = targetY;
       piece.solved = true;
-      piece.placedRow = targetRow;
-      piece.placedCol = targetCol;
+      piece.placedRow = target.row;
+      piece.placedCol = target.col;
       piece.canvas.style.left = `${targetX}px`;
       piece.canvas.style.top = `${targetY}px`;
-      piece.canvas.style.zIndex = String(1 + targetRow * gridCols + targetCol);
+      piece.canvas.style.zIndex = String(1 + target.row * gridCols + target.col);
 
       boardOccupancy.set(key, piece);
       solvedCount += 1;
@@ -504,87 +436,15 @@
     isSolving = false;
   }
 
-  function tryFindSnapCell(piece) {
-    const col = Math.round((piece.x - boardRect.x) / pieceW);
-    const row = Math.round((piece.y - boardRect.y) / pieceH);
-
-    if (row < 0 || row >= gridRows || col < 0 || col >= gridCols) {
-      return null;
-    }
-
-    const snapX = boardRect.x + col * pieceW;
-    const snapY = boardRect.y + row * pieceH;
-    const dx = piece.x - snapX;
-    const dy = piece.y - snapY;
-    const snapTolerance = Math.max(
-      4,
-      Math.min(SNAP_DISTANCE, pieceW * 0.22, pieceH * 0.22),
-    );
-    const withinSnapWindow =
-      Math.abs(dx) <= snapTolerance && Math.abs(dy) <= snapTolerance;
-
-    if (!withinSnapWindow) {
-      return null;
-    }
-
-    const key = cellKey(row, col);
-    if (boardOccupancy.has(key)) {
-      return null;
-    }
-
-    return { row, col, x: snapX, y: snapY, key };
-  }
-
   function validateSolvedLayout() {
-    if (solvedCount !== pieces.length) {
-      return { solved: false, reason: "not-full" };
-    }
-
-    for (let row = 0; row < gridRows; row += 1) {
-      const seenOuter = new Set();
-      const seenInner = new Set();
-
-      for (let col = 0; col < gridCols; col += 1) {
-        const piece = boardOccupancy.get(cellKey(row, col));
-        if (!piece) {
-          return { solved: false, reason: "not-full" };
-        }
-
-        if (
-          seenOuter.has(piece.outerColor) ||
-          seenInner.has(piece.innerColor)
-        ) {
-          return { solved: false, reason: "row-duplicate" };
-        }
-
-        seenOuter.add(piece.outerColor);
-        seenInner.add(piece.innerColor);
-      }
-    }
-
-    for (let col = 0; col < gridCols; col += 1) {
-      const seenOuter = new Set();
-      const seenInner = new Set();
-
-      for (let row = 0; row < gridRows; row += 1) {
-        const piece = boardOccupancy.get(cellKey(row, col));
-        if (!piece) {
-          return { solved: false, reason: "not-full" };
-        }
-
-        if (
-          seenOuter.has(piece.outerColor) ||
-          seenInner.has(piece.innerColor)
-        ) {
-          return { solved: false, reason: "col-duplicate" };
-        }
-
-        seenOuter.add(piece.outerColor);
-        seenInner.add(piece.innerColor);
-      }
-    }
-
-    return { solved: true, reason: "ok" };
+    return solver.validateSolvedLayout({
+      solvedCount,
+      totalPieces: pieces.length,
+      gridRows,
+      gridCols,
+      boardOccupancy,
+      cellKey,
+    });
   }
 
   function shuffleInPlace(items) {
@@ -639,118 +499,27 @@
   }
 
   function createPieceCanvas(row, col) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const padding = 0;
     const combo = tileCombos[row][col];
-    const tileSize = Math.min(pieceW, pieceH);
-
-    canvas.width = Math.max(1, Math.floor(tileSize));
-    canvas.height = Math.max(1, Math.floor(tileSize));
-    canvas.className = "piece";
-
-    ctx.fillStyle = combo.outerColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const innerXPos = canvas.width * 0.2;
-    const innerYPos = canvas.height * 0.2;
-    const innerW = canvas.width * 0.6;
-    const innerH = canvas.height * 0.6;
-
-    ctx.fillStyle = combo.innerColor;
-    ctx.fillRect(innerXPos, innerYPos, innerW, innerH);
-
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = Math.max(0.375, canvas.width * 0.00875);
-    ctx.strokeRect(innerXPos, innerYPos, innerW, innerH);
-
-    ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
-    ctx.lineWidth = 1.2;
-    ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-    return { canvas, padding };
+    const canvas = boardRenderer.createPieceCanvas({ combo, pieceW, pieceH });
+    return { canvas, padding: 0 };
   }
 
   function buildBoardLayout() {
-    const fieldW = playfield.clientWidth;
-    const fieldH = playfield.clientHeight;
-    const margin = 8;
-    const maxBoardW = Math.max(80, fieldW - margin * 2);
-    const maxBoardH = Math.max(80, fieldH - margin * 2);
-    const tileSize = Math.max(
-      8,
-      Math.floor(Math.min(maxBoardW / gridCols, maxBoardH / gridRows)),
-    );
-    const boardW = tileSize * gridCols;
-    const boardH = tileSize * gridRows;
+    const layout = boardRenderer.buildBoardLayout({
+      playfield,
+      board,
+      boardOverlay,
+      gridRows,
+      gridCols,
+      overlayOpacity,
+      createPalette,
+      hasNoEulerSquareSolution,
+      getGuideCombo,
+    });
 
-    pieceW = tileSize;
-    pieceH = tileSize;
-
-    const boardX = Math.round((fieldW - boardW) / 2);
-    const boardY = Math.round((fieldH - boardH) / 2);
-
-    const textureW = boardW;
-    const textureH = boardH;
-    puzzleTexture = document.createElement("canvas");
-    puzzleTexture.width = textureW;
-    puzzleTexture.height = textureH;
-    const tctx = puzzleTexture.getContext("2d");
-    tctx.clearRect(0, 0, textureW, textureH);
-    const palette = createPalette(gridRows);
-    const noSolution = hasNoEulerSquareSolution();
-
-    for (let row = 0; row < gridRows; row += 1) {
-      for (let col = 0; col < gridCols; col += 1) {
-        const combo = getGuideCombo(row, col, palette);
-        const x = col * pieceW;
-        const y = row * pieceH;
-        const innerX = x + pieceW * 0.2;
-        const innerY = y + pieceH * 0.2;
-        const innerW = pieceW * 0.6;
-        const innerH = pieceH * 0.6;
-
-        tctx.fillStyle = combo ? combo.outerColor : "#8c564b";
-        tctx.fillRect(x, y, pieceW, pieceH);
-
-        tctx.fillStyle = combo ? combo.innerColor : "#f3ecd6";
-        tctx.fillRect(innerX, innerY, innerW, innerH);
-
-        tctx.strokeStyle = "#000000";
-        tctx.lineWidth = Math.max(0.375, pieceW * 0.00875);
-        tctx.strokeRect(innerX, innerY, innerW, innerH);
-
-        if (noSolution) {
-          tctx.fillStyle = "rgba(21, 33, 47, 0.82)";
-          tctx.font = `${Math.max(16, Math.floor(pieceW * 0.52))}px Candara, Segoe UI, sans-serif`;
-          tctx.textAlign = "center";
-          tctx.textBaseline = "middle";
-          tctx.fillText("?", x + pieceW * 0.5, y + pieceH * 0.5);
-        }
-      }
-    }
-
-    board.style.left = `${boardX}px`;
-    board.style.top = `${boardY}px`;
-    board.style.width = `${boardW}px`;
-    board.style.height = `${boardH}px`;
-
-    boardOverlay.style.left = `${boardX}px`;
-    boardOverlay.style.top = `${boardY}px`;
-    boardOverlay.style.width = `${boardW}px`;
-    boardOverlay.style.height = `${boardH}px`;
-    boardOverlay.style.backgroundImage = `url(${puzzleTexture.toDataURL("image/png")})`;
-    boardOverlay.style.backgroundSize = "100% 100%";
-    boardOverlay.style.opacity = String(overlayOpacity);
-
-    boardRect = {
-      x: boardX,
-      y: boardY,
-      w: boardW,
-      h: boardH,
-      fieldW,
-      fieldH,
-    };
+    pieceW = layout.pieceW;
+    pieceH = layout.pieceH;
+    boardRect = layout.boardRect;
   }
 
   function shufflePieces() {
@@ -793,12 +562,7 @@
     );
   }
 
-  function onPointerDown(event) {
-    const piece = pieces.find((p) => p.canvas === event.currentTarget);
-    if (!piece) {
-      return;
-    }
-
+  function onPieceLiftedFromSolvedCell(piece) {
     if (piece.solved && piece.placedRow !== null && piece.placedCol !== null) {
       const previousKey = cellKey(piece.placedRow, piece.placedCol);
       boardOccupancy.delete(previousKey);
@@ -810,61 +574,9 @@
         `${solvedCount}/${pieces.length} ${STATUS_TEXT.tilesPlacedSuffix}`,
       );
     }
-
-    activeDrag.piece = piece;
-    const rect = piece.canvas.getBoundingClientRect();
-    const fieldRect = playfield.getBoundingClientRect();
-
-    activeDrag.offsetX = event.clientX - rect.left;
-    activeDrag.offsetY = event.clientY - rect.top;
-
-    piece.canvas.classList.add("dragging");
-    piece.canvas.style.zIndex = String(++zCounter);
-
-    piece.dragBoundary = {
-      left: fieldRect.left,
-      top: fieldRect.top,
-      right: fieldRect.right,
-      bottom: fieldRect.bottom,
-    };
-
-    event.preventDefault();
   }
 
-  function onPointerMove(event) {
-    const piece = activeDrag.piece;
-    if (!piece) {
-      return;
-    }
-
-    const bounds = piece.dragBoundary;
-    const localX = clamp(
-      event.clientX - bounds.left - activeDrag.offsetX,
-      0,
-      boardRect.fieldW - piece.canvas.width,
-    );
-    const localY = clamp(
-      event.clientY - bounds.top - activeDrag.offsetY,
-      0,
-      boardRect.fieldH - piece.canvas.height,
-    );
-
-    piece.x = localX;
-    piece.y = localY;
-    piece.canvas.style.left = `${localX}px`;
-    piece.canvas.style.top = `${localY}px`;
-  }
-
-  function onPointerUp() {
-    const piece = activeDrag.piece;
-    if (!piece) {
-      return;
-    }
-
-    piece.canvas.classList.remove("dragging");
-    const snapCell = tryFindSnapCell(piece);
-
-    if (snapCell) {
+  function onPieceSnapped(piece, snapCell) {
       piece.x = snapCell.x;
       piece.y = snapCell.y;
       piece.solved = true;
@@ -892,10 +604,22 @@
       }
 
       saveGameState();
-    }
-
-    activeDrag.piece = null;
   }
+
+  inputController = inputControllerModule.create({
+    playfield,
+    getPieces: () => pieces,
+    getBoardRect: () => boardRect,
+    getPieceSize: () => ({ pieceW, pieceH }),
+    getGridSize: () => ({ gridRows, gridCols }),
+    getSnapDistance: () => SNAP_DISTANCE,
+    cellKey,
+    boardOccupancy,
+    clamp,
+    nextZIndex: () => ++zCounter,
+    onPieceLiftedFromSolvedCell,
+    onPieceSnapped,
+  });
 
   function clearPieces() {
     pieces.forEach((piece) => {
@@ -924,7 +648,7 @@
           placedCol: null,
         };
 
-        canvas.addEventListener("pointerdown", onPointerDown);
+        inputController.bindPiece(canvas);
         playfield.appendChild(canvas);
         pieces.push(piece);
       }
@@ -939,64 +663,21 @@
   }
 
   function rebuildGamePreservingState() {
-    // Save old board dimensions
-    const oldBoardWidth = boardRect.width;
-    const oldBoardHeight = boardRect.height;
-
-    // Save current piece state before rebuild
-    const savedPieces = pieces.map((piece) => {
-      const pieceData = {
-        placedRow: piece.placedRow,
-        placedCol: piece.placedCol,
-        solved: piece.solved,
-      };
-
-      // For misplaced tiles, store relative position based on old board size
-      if (piece.placedRow === null || piece.placedCol === null) {
-        pieceData.relX = oldBoardWidth > 0 ? piece.x / oldBoardWidth : 0;
-        pieceData.relY = oldBoardHeight > 0 ? piece.y / oldBoardHeight : 0;
-      }
-
-      return pieceData;
-    });
+    const savedPieces = gameState.createPieceSnapshot({ pieces, boardRect });
 
     buildBoardLayout();
     boardOccupancy.clear();
     buildPieces();
-
-    // Restore saved positions to rebuilt pieces
-    pieces.forEach((piece, index) => {
-      if (index < savedPieces.length) {
-        const saved = savedPieces[index];
-        piece.placedRow = saved.placedRow;
-        piece.placedCol = saved.placedCol;
-        piece.solved = saved.solved;
-
-        // For placed tiles, calculate position from grid coordinates
-        if (piece.placedRow !== null && piece.placedCol !== null) {
-          piece.x = boardRect.x + piece.placedCol * pieceW;
-          piece.y = boardRect.y + piece.placedRow * pieceH;
-          boardOccupancy.set(`${piece.placedRow}:${piece.placedCol}`, piece);
-          piece.canvas.style.zIndex = String(
-            1 + piece.placedRow * gridCols + piece.placedCol,
-          );
-        } else {
-          // For misplaced tiles, restore to scaled relative position
-          if (saved.relX !== undefined && saved.relY !== undefined) {
-            piece.x = saved.relX * boardRect.width;
-            piece.y = saved.relY * boardRect.height;
-          }
-        }
-
-        piece.canvas.style.left = `${piece.x}px`;
-        piece.canvas.style.top = `${piece.y}px`;
-      }
+    solvedCount = gameState.restorePiecesFromSnapshot({
+      pieces,
+      snapshot: savedPieces,
+      boardRect,
+      pieceW,
+      pieceH,
+      gridCols,
+      boardOccupancy,
+      cellKey,
     });
-
-    // Recalculate solvedCount based on restored piece state
-    solvedCount = pieces.filter(
-      (piece) => piece.placedRow !== null && piece.placedCol !== null,
-    ).length;
   }
 
   function startNewGame() {
@@ -1068,9 +749,7 @@
     }, 150);
   });
 
-  document.addEventListener("pointermove", onPointerMove);
-  document.addEventListener("pointerup", onPointerUp);
-  document.addEventListener("pointercancel", onPointerUp);
+  inputController.bindDocument(document);
 
   menuBtn.addEventListener("click", openMenu);
   navCloseBtn.addEventListener("click", closeMenu);

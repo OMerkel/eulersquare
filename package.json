@@ -7,7 +7,17 @@
 		"doc": "doc"
 	},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"test:sw": "node javascript/html5/1.2/src/test/sw.tests.node.js",
+		"coverage:req:prepare": "node javascript/html5/1.2/src/test/requirements-coverage.prepare.js --browser-source file",
+		"coverage:req:prepare:auto": "node javascript/html5/1.2/src/test/requirements-coverage.prepare.js --browser-source auto",
+		"coverage:req:run": "npm run coverage:req:prepare:auto && npm run coverage:req -- --input javascript/html5/1.2/src/test/coverage-input.txt",
+		"coverage:req": "node javascript/html5/1.2/src/test/requirements-coverage.js",
+		"coverage:req:sample": "node javascript/html5/1.2/src/test/requirements-coverage.js --input javascript/html5/1.2/src/test/fixtures/harness-output.sample.txt --scope FR",
+		"coverage:req:sample:nfr": "node javascript/html5/1.2/src/test/requirements-coverage.js --input javascript/html5/1.2/src/test/fixtures/harness-output.sample.txt --scope NFR",
+		"coverage:req:sample:all": "npm run coverage:req:sample && npm run coverage:req:sample:nfr",
+		"coverage:req:sample:json": "node javascript/html5/1.2/src/test/requirements-coverage.sample-json.js",
+		"coverage:req:selftest": "node javascript/html5/1.2/src/test/requirements-coverage.selftest.js"
 	},
 	"repository": {
 		"type": "git",

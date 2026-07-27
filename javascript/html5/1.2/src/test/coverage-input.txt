@@ -1,0 +1,54 @@
+Starting Euler Square module tests...
+
+Suite: solver
+- exposesExpectedApi
+OK hasNoEulerSquareSolution exposed
+OK getGuideCombo exposed
+OK validateSolvedLayout exposed
+OK findSolveTargetForColors exposed
+- detectsNoSolutionSizes
+FAIL 2x2 flagged as no-solution
+OK 6x6 flagged as no-solution
+OK 5x5 allowed
+
+Suite: input-controller
+- exposesExpectedApi
+OK create exposed
+
+Suite: hmi-integration
+- requiredDomElementsExist
+OK playfield exists
+OK board exists
+OK board overlay exists
+OK status exists
+
+Suite: sw-node
+- registersLifecycleEventHandlers
+OK install handler registered
+OK activate handler registered
+OK fetch handler registered
+- precacheCoreAssetsInProductionHost
+[Service Worker] Installing...
+[Service Worker] Dev test caching disabled
+[Service Worker] Caching static assets
+OK core assets include app scripts
+OK test assets are excluded for production host
+- precacheDevTestAssetsOnLocalhost
+[Service Worker] Installing...
+[Service Worker] Dev test caching enabled
+[Service Worker] Caching static assets
+OK test assets are included on localhost
+- servesStaticFromCacheFirst
+[Service Worker] Served from cache: https://app.local/js/hmi.js
+OK static asset served from cache (expected: cached-js, got: cached-js)
+OK network not used when static cache hit exists (expected: 0, got: 0)
+- fallbackBehaviorForStaticAndDocuments
+[Service Worker] Installing...
+[Service Worker] Dev test caching enabled
+[Service Worker] Caching static assets
+OK non-document static fallback returns Response.error (expected: error, got: error)
+OK document fallback resolves to cached index response
+- networkFirstForNonStaticAndRuntimeCaching
+OK non-static request uses network-first response (expected: api-ok, got: api-ok)
+OK non-static response stored in runtime cache
+[Service Worker] Activating...

@@ -5,24 +5,35 @@ Canvas, and JavaScript.
 
 ## Features
 
-- 🧩 **Classic Euler Square Gameplay** — Assemble puzzle pieces using
-  drag-and-drop mechanics
-- 🧲 **Magnetic Snapping** — Pieces automatically snap into place when
-  moved close to any free board location
-- 🖼️ **Guide Overlay** — Semi-transparent board guide (20% opacity)
-  shows a deterministic valid solution layout for odd sizes and for
-  4x4, 8x8, 10x10, 12x12, and 14x14; for 2x2 and 6x6 it displays question
-  marks because no Euler-square solution exists
-- 📱 **Responsive Design** — Adapts to different screen sizes and
-  orientations
-- 🎮 **Touch-Friendly** — Full pointer event support for mouse, touch,
-  and pen input
-- 🧪 **Unit Tests** — Comprehensive test suite to detect regressions
-  and ensure game stability
+- Classic Euler Square gameplay with drag-and-drop tiles
+- Magnetic snapping to free board cells
+- Guide overlay (20% opacity) with deterministic layouts
+- Responsive playfield and board scaling
+- Pointer-event input support (mouse, touch, pen)
+- Modular JavaScript architecture with module-focused browser tests
+
+## Usage
+
+### Start the game
+
+1. Open `javascript/html5/1.2/src/index.html` in a modern browser.
+2. Drag tiles from the playfield onto the board.
+3. Tiles snap when dropped close to a free target cell.
+4. Use **Show Guide** to toggle the solution overlay.
+5. Use **New...** to reshuffle tiles.
+6. Use **Solve** to auto-place tiles for supported sizes.
+
+### Puzzle-size behavior
+
+- Supported size range: `1x1` to `14x14`
+- No-solution guide sizes: `2x2` and `6x6`
+- Template/constructive guide logic:
+  - odd orders: affine construction
+  - even templates: `4, 8, 10, 12, 14`
 
 ## How to Play
 
-1. **Open the game** — Load `javascript/html5/src/index.html` in a
+1. **Open the game** — Load `javascript/html5/1.2/src/index.html` in a
    modern web browser
 2. **Examine the board** — Use "Show Guide" to view the faint overlay
   guidance board
@@ -46,7 +57,7 @@ Canvas, and JavaScript.
 ### Setup
 
 1. Clone or download this repository
-2. Open `javascript/html5/src/index.html` in your browser
+2. Open `javascript/html5/1.2/src/index.html` in your browser
 
 ## Project Structure
 
@@ -54,56 +65,105 @@ Canvas, and JavaScript.
 euler-square/
 ├── LICENSE                           # MIT License
 ├── README.md                         # This file
-└── javascript/html5/src/
-    ├── index.html                   # Main game UI and styles
-    ├── js/
-    │   └── hmi.js                   # Game logic and mechanics
-    └── test/
-        └── tests.js                 # Unit tests
+└── javascript/html5/1.2/src/
+  ├── index.html                   # Main game UI and script loading
+  ├── sw.js                        # Service worker cache/offline logic
+  ├── js/
+  │   ├── constants.js             # Domain constants and templates
+  │   ├── ui-constants.js          # UI labels and DOM id mapping
+  │   ├── solver.js                # Solver and validation domain logic
+  │   ├── game-state.js            # Save/restore and snapshot state logic
+  │   ├── board-renderer.js        # Board/piece rendering and layout
+  │   ├── input-controller.js      # Pointer drag/drop and snapping
+  │   └── hmi.js                   # App orchestration/bootstrap
+  └── test/
+    ├── test-harness.js          # Shared test harness and suite runner
+    ├── solver.tests.js
+    ├── game-state.tests.js
+    ├── board-renderer.tests.js
+    ├── input-controller.tests.js
+    ├── hmi.tests.js
+    └── tests.js                 # Runner entrypoint
 ```
 
 ## Testing
 
-Unit tests run automatically when the page loads. Open your browser
-console (`F12 → Console`) to view results:
+### When tests run
+
+Tests are not loaded in production by default.
+
+Tests load automatically when either condition is true:
+
+- Host is local development (`localhost`, `127.0.0.1`, `[::1]`)
+- Query parameter `?tests=1` is present
+
+Examples:
+
+- `.../javascript/html5/1.2/src/` (localhost): tests load automatically
+- `.../javascript/html5/1.2/src/?tests=1`: tests are forced on any host
+
+### How to run and observe
+
+1. Open the page with tests enabled.
+2. Open browser dev tools (`F12`) and select **Console**.
+3. Look for suite-by-suite output and final summary from the harness.
+
+Sample output:
 
 ```text
-🧪 Starting Euler Square Game Tests...
+Starting Euler Square module tests...
 
-✓ size selector exists
-✓ palette legend renders at least one swatch
-✓ pointermove handler can be triggered
-✓ distance < snap distance snaps
+Suite: solver
+OK hasNoEulerSquareSolution exposed
+OK odd order guide combo exists
+
+Suite: input-controller
+OK create exposed
+OK snap callback invoked after move
 ...
 
-Test Results: 38/38 passed
+Test Results: X/Y passed
 ```
 
-Tests verify:
+### Test behavior and scope
 
-- DOM structure and element presence
-- CSS styling and positioning
-- Pointer event handling
-- Snapping distance calculations
-- Game completion logic
-- Browser compatibility
-- Event delegation
+Test suites are separated by software architecture module:
+
+- `solver.tests.js`
+  - API exposure
+  - no-solution size detection
+  - guide-combo construction
+  - solved-layout validation rules
+- `game-state.tests.js`
+  - persisted state create/parse
+  - snapshot restore and occupancy restoration
+- `board-renderer.tests.js`
+  - tile canvas creation
+  - board layout and style application
+- `input-controller.tests.js`
+  - pointer lifecycle behavior
+  - solved-piece lift callback
+  - snap callback and occupancy updates
+- `hmi.tests.js`
+  - DOM presence and integration-level behavior checks
 
 To run tests manually, call:
 
 ```javascript
-EulerSquareTests.runAll()
+window.EulerSquareTestHarness.runAll()
 ```
 
 ## Technical Details
 
 ### Architecture
 
-- **Single-file game logic** — All game mechanics in `js/hmi.js`
-- **Canvas-based rendering** — Pieces are rendered to individual
-  canvases for performance
-- **Procedural color-pair generation** — Unique outer/inner color
-  combinations are generated from an n-color palette
+- **Orchestration** — `js/hmi.js`
+- **Puzzle domain logic** — `js/solver.js`
+- **State persistence/restoration** — `js/game-state.js`
+- **Rendering/layout** — `js/board-renderer.js`
+- **Pointer interactions** — `js/input-controller.js`
+- **Canvas-based rendering** — Pieces rendered to individual canvases
+- **Generated color pairs** — Outer/inner combinations from an n-color palette
 
 ### Key Features
 
