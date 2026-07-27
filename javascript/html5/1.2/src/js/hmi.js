@@ -722,6 +722,29 @@
     navBackdrop.setAttribute("aria-hidden", "true");
   }
 
+  function bindTapAction(element, action) {
+    if (!element || typeof action !== "function") {
+      return;
+    }
+
+    let touchHandled = false;
+
+    element.addEventListener("touchend", (event) => {
+      touchHandled = true;
+      event.preventDefault();
+      action();
+    }, { passive: false });
+
+    element.addEventListener("click", (event) => {
+      if (touchHandled) {
+        touchHandled = false;
+        event.preventDefault();
+        return;
+      }
+      action();
+    });
+  }
+
   function openOverlay(pageKey) {
     const page = overlayPages[pageKey];
     if (!page) {
@@ -751,21 +774,23 @@
 
   inputController.bindDocument(document);
 
-  menuBtn.addEventListener("click", openMenu);
-  navCloseBtn.addEventListener("click", closeMenu);
-  navBackdrop.addEventListener("click", closeMenu);
+  bindTapAction(menuBtn, openMenu);
+  bindTapAction(navCloseBtn, closeMenu);
+  bindTapAction(navBackdrop, closeMenu);
 
-  navNewGame.addEventListener("click", () => {
+  bindTapAction(navNewGame, () => {
     closeMenu();
     startNewGame();
   });
 
-  navSolve.addEventListener("click", () => {
+  const runSolveAction = () => {
     closeMenu();
     solvePuzzle();
-  });
+  };
 
-  navOptions.addEventListener("click", () => {
+  bindTapAction(navSolve, runSolveAction);
+
+  bindTapAction(navOptions, () => {
     sizeSelect.value = String(gridRows);
     renderPaletteLegend(gridRows);
     openOverlay("options");
@@ -776,15 +801,15 @@
     renderPaletteLegend(clamp(nextSize, GRID_MIN, GRID_MAX));
   });
 
-  navAbout.addEventListener("click", () => {
+  bindTapAction(navAbout, () => {
     openOverlay("about");
   });
 
-  navRules.addEventListener("click", () => {
+  bindTapAction(navRules, () => {
     openOverlay("rules");
   });
 
-  navInfo.addEventListener("click", () => {
+  bindTapAction(navInfo, () => {
     openOverlay("info");
   });
 

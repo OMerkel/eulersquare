@@ -144,10 +144,10 @@
     "#e377c2",
     "#bcbd22",
     "#7f7f7f",
-    "#4e79a7",
-    "#f28e2b",
-    "#59a14f",
-    "#edc948",
+    "#ffe100",
+    "#121212",
+    "#f8f4e3",
+    "#00e5ff",
   ];
 
   window.EulerSquareConstants = Object.freeze({
