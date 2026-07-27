@@ -110,6 +110,7 @@
   let gridRows = GRID_DEFAULT;
   let gridCols = GRID_DEFAULT;
   let isSolving = false;
+  let currentPalette = BASE_PALETTE.slice(0, GRID_DEFAULT);
   const boardOccupancy = new Map();
   let inputController = null;
 
@@ -130,6 +131,7 @@
       gridRows,
       gridCols,
       boardRect,
+      palette: currentPalette,
       tileCombos,
       pieces,
     });
@@ -146,9 +148,13 @@
 
     gridRows = state.gridRows;
     gridCols = state.gridCols;
+    currentPalette = Array.isArray(state.palette)
+      ? state.palette.slice(0, gridRows)
+      : BASE_PALETTE.slice(0, gridRows);
 
     // Restore the exact tile combinations (colors) that were used
     tileCombos = state.tileCombos;
+    renderPaletteLegend(gridRows);
     buildBoardLayout();
     buildPieces();
     boardOccupancy.clear();
@@ -245,7 +251,7 @@
     }
 
     isSolving = true;
-    const palette = BASE_PALETTE;
+    const palette = currentPalette;
     const animationDuration = 800;
 
     // Categorize tiles:
@@ -457,7 +463,16 @@
   }
 
   function createPalette(colorCount) {
+    if (colorCount === gridRows && currentPalette.length === colorCount) {
+      return currentPalette.slice();
+    }
     return BASE_PALETTE.slice(0, colorCount);
+  }
+
+  function createPermutedPalette(colorCount) {
+    const palette = BASE_PALETTE.slice(0, colorCount);
+    shuffleInPlace(palette);
+    return palette;
   }
 
   function renderPaletteLegend(size) {
@@ -475,7 +490,7 @@
   }
 
   function generateTileCombos() {
-    const palette = createPalette(gridRows);
+    const palette = currentPalette;
     const combos = [];
 
     for (let outer = 0; outer < palette.length; outer += 1) {
@@ -682,6 +697,8 @@
 
   function startNewGame() {
     setStatus(STATUS_TEXT.preparing);
+    currentPalette = createPermutedPalette(gridRows);
+    renderPaletteLegend(gridRows);
     generateTileCombos();
     rebuildGame();
     if (hasNoEulerSquareSolution()) {
