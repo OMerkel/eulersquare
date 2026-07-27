@@ -21,6 +21,7 @@
         gridRows: 2,
         gridCols: 2,
         boardRect: { width: 100, height: 100 },
+        palette: ["#222", "#111"],
         tileCombos: [
           [
             { outerColor: "#111", innerColor: "#aaa" },
@@ -41,6 +42,8 @@
       assertNotNull(parsed, "persisted state parses");
       assertEqual(parsed.gridRows, 2, "gridRows persisted");
       assertEqual(parsed.gridCols, 2, "gridCols persisted");
+      assertEqual(parsed.palette[0], "#222", "palette order persisted");
+      assertEqual(parsed.palette[1], "#111", "palette order persisted fully");
       assertEqual(parsed.pieces.length, 2, "pieces length persisted");
       assert(parsed.pieces[1].relX > 0, "relative X persisted for unplaced tile");
       assert(parsed.pieces[1].relY > 0, "relative Y persisted for unplaced tile");
@@ -105,6 +108,14 @@
         pieces: [],
       });
       assertEqual(gameState.parsePersistedState(missingCombos), null, "missing tileCombos rejected");
+
+      const legacyWithoutPalette = JSON.stringify({
+        gridRows: 2,
+        gridCols: 2,
+        pieces: [],
+        tileCombos: [],
+      });
+      assertNotNull(gameState.parsePersistedState(legacyWithoutPalette), "legacy state without palette stays parse-compatible");
     },
   });
 })();

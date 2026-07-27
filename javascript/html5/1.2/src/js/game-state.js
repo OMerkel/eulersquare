@@ -1,5 +1,12 @@
 (() => {
-  function createPersistedState({ gridRows, gridCols, boardRect, tileCombos, pieces }) {
+  function createPersistedState({
+    gridRows,
+    gridCols,
+    boardRect,
+    palette,
+    tileCombos,
+    pieces,
+  }) {
     const boardWidth = boardRect.width;
     const boardHeight = boardRect.height;
 
@@ -8,6 +15,7 @@
       gridCols,
       boardWidth,
       boardHeight,
+      palette: Array.isArray(palette) ? palette.slice() : null,
       tileCombos: tileCombos.map((row) =>
         row.map((combo) => ({
           outerColor: combo.outerColor,
